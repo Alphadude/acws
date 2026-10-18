@@ -863,15 +863,13 @@ h4 { font-size: var(--step-1); font-weight: 600; letter-spacing: -0.012em; }
 }
 :root .reel::after { border-color: rgba(122, 90, 17, .3); }
 
-@media (max-width: 860px) {
-/* Two up, then the third centred — better than three squeezed columns */
-  .reels { grid-template-columns: repeat(2, 1fr); }
-  .reels .reel:last-child { grid-column: 1 / -1; max-width: 60%; margin-inline: auto; }
+@media (max-width: 960px) {
+  .reels { grid-template-columns: repeat(2, 1fr); gap: 1.25rem; }
+  .reels .reel:last-child { grid-column: auto; max-width: none; margin-inline: 0; }
 }
 
 @media (max-width: 560px) {
-.reels { grid-template-columns: 1fr; }
-  .reels .reel:last-child { grid-column: auto; max-width: none; }
+  .reels { grid-template-columns: 1fr; }
 }
 
 
