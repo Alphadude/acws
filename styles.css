@@ -205,9 +205,7 @@ h4 { font-size: var(--step-1); font-weight: 600; letter-spacing: -0.012em; }
 .section--tight { padding-block: clamp(3rem, 5vw, 5.5rem); }
 .section--alt { background: var(--bg-alt); border-block: 1px solid var(--line); }
 .section--dark {
-  background:
-    radial-gradient(90% 120% at 85% 0%, rgba(122, 30, 43, .34), transparent 62%),
-    var(--noir-950);
+  background: #000000;
   border-block: 1px solid var(--line-gold);
 }
 .section-head { max-width: 84ch; display: grid; gap: var(--sp-2); margin-bottom: var(--sp-5); }
@@ -711,7 +709,7 @@ h4 { font-size: var(--step-1); font-weight: 600; letter-spacing: -0.012em; }
 :root .page-hero .hero__meta { color: var(--gold-300); border-top-color: rgba(212,167,60,.34); }
 :root .page-hero .btn--ghost-gold { color: var(--gold-200); border-color: var(--gold-400); background: rgba(212,167,60,.12); }
 :root .page-hero .btn--ghost-gold:hover { background: rgba(212,167,60,.24); color: #FFF6E0; }
-:root .page-hero .frame { background: var(--espresso-900); }
+:root .page-hero .frame { background: #000000; }
 
 :root .section--dark .card {
   background: rgba(246, 235, 210, .06);
@@ -808,7 +806,7 @@ h4 { font-size: var(--step-1); font-weight: 600; letter-spacing: -0.012em; }
   font-size: var(--step--1);
   letter-spacing: .16em;
   text-transform: uppercase;
-  background: rgba(17, 10, 6, .78);
+  background: rgba(0, 0, 0, .82);
   backdrop-filter: blur(8px);
   -webkit-backdrop-filter: blur(8px);
   color: var(--gold-300);
@@ -823,7 +821,7 @@ h4 { font-size: var(--step-1); font-weight: 600; letter-spacing: -0.012em; }
   right: 0;
   z-index: 4;
   padding: 2.25rem 1.25rem 1.25rem;
-  background: linear-gradient(180deg, transparent 0%, rgba(17, 10, 6, .85) 45%, rgba(17, 10, 6, .98) 100%);
+  background: linear-gradient(180deg, transparent 0%, rgba(0, 0, 0, .85) 45%, rgba(0, 0, 0, .98) 100%);
   color: #FFFFFF;
 }
 .reel__caption h4 {
@@ -858,7 +856,7 @@ h4 { font-size: var(--step-1); font-weight: 600; letter-spacing: -0.012em; }
 }
 .reel.is-full .reel__play { display: none; }
 
-:root .reel__play { background: rgba(31, 21, 14, .72); }
+:root .reel__play { background: rgba(0, 0, 0, .75); }
 :root .reel__play:hover {
   background: var(--gold-500);
   color: var(--espresso-900);
@@ -1331,7 +1329,7 @@ legend {
 }
 .promo-bar__text { margin: 0; display: flex; align-items: center; gap: .6rem; flex-wrap: wrap; }
 .promo-bar__tag {
-  background: var(--espresso-900); color: #F0DDAE;
+  background: #000000; color: #F0DDAE;
   padding: .16rem .5rem; border-radius: 999px;
   font-size: .72rem; font-weight: 600;
   letter-spacing: .1em; text-transform: uppercase;
@@ -1583,9 +1581,7 @@ legend {
 
 /* --- CTA band ----------------------------------------------------------- */
 .cta-band {
-  background:
-    radial-gradient(80% 120% at 0% 100%, rgba(85, 19, 29, .55), transparent 62%),
-    var(--noir-950);
+  background: #000000;
   border-block: 1px solid var(--line-gold);
   text-align: center;
 }
@@ -1681,7 +1677,7 @@ legend {
     max-height: calc(100dvh - 70px);
     overflow-y: auto;
     -webkit-overflow-scrolling: touch;
-    background: rgba(14, 9, 6, .98);
+    background: rgba(0, 0, 0, .98);
     backdrop-filter: blur(28px);
     -webkit-backdrop-filter: blur(28px);
     border-bottom: 2px solid var(--gold-500);
@@ -1864,7 +1860,7 @@ legend {
 
 :root .section--dark,
 :root .cta-band {
-  background: linear-gradient(150deg, #140E0A 0%, #2A1A12 55%, #140E0A 100%);
+  background: #000000;
   border-block: 1px solid rgba(176, 138, 40, .45);
   color: #F8F5F0;
 }
@@ -1916,11 +1912,11 @@ legend {
   color: #FFF6E0;
 }
 :root .link-arrow { color: var(--gold-700); }
-:root .skip-link { background: var(--espresso-900); color: var(--gold-200); }
+:root .skip-link { background: #000000; color: var(--gold-200); }
 
-/* --- Header stays deep espresso bar --------------------------------------- */
+/* --- Header black bar ----------------------------------------------------- */
 :root .header {
-  background: rgba(20, 14, 10, .94);
+  background: rgba(0, 0, 0, .95);
   backdrop-filter: blur(14px);
   -webkit-backdrop-filter: blur(14px);
   border-bottom: 1px solid rgba(176, 138, 40, .5);
@@ -2241,7 +2237,7 @@ legend {
 
 /* --- Map & Actions --- */
 :root .map {
-  background: #140E0A;
+  background: #000000;
   border-color: var(--line-gold-strong);
 }
 :root .map__plate { color: #FFFFFF; }
@@ -2285,7 +2281,7 @@ legend {
   overflow: visible;
 }
 .modal-dialog::backdrop {
-  background: rgba(17, 10, 6, .72);
+  background: rgba(0, 0, 0, .75);
   backdrop-filter: blur(8px);
   -webkit-backdrop-filter: blur(8px);
 }
@@ -2536,7 +2532,7 @@ legend {
   min-height: 100vh;
 }
 .reg-hero {
-  background: linear-gradient(180deg, #0A0608 0%, #170E14 100%);
+  background: #000000;
   color: var(--cream);
   padding: clamp(2.5rem, 5vw, 4.5rem) 0 clamp(2rem, 4vw, 3.5rem);
   border-bottom: 1px solid var(--line-gold);
