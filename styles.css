@@ -1593,7 +1593,7 @@ legend {
 
 /* --- Footer ------------------------------------------------------------- */
 .footer {
-  background: var(--noir-950);
+  background: #000000;
   border-top: 1px solid var(--line-gold);
   color: var(--text-muted);
   padding-block: var(--sp-6) var(--sp-4);
@@ -2262,9 +2262,9 @@ legend {
   color: #FFFFFF;
 }
 
-/* --- Footer stays deep espresso --- */
+/* --- Footer black --- */
 :root .footer {
-  background: #110A06;
+  background: #000000;
   border-top: 1px solid rgba(176, 138, 40, .45);
   color: #D2CABD;
 }
