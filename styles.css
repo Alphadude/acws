@@ -2907,8 +2907,25 @@ legend {
   font-size: .82rem;
   color: var(--mocha-500);
   line-height: 1.45;
-  margin-bottom: 1rem;
-  flex-grow: 1;
+  margin-bottom: .75rem;
+}
+.pkg-card__ideal {
+  font-size: .75rem;
+  color: var(--mocha-400);
+  background: rgba(212, 167, 60, .08);
+  border-left: 2px solid var(--gold-500);
+  padding: .45rem .65rem;
+  border-radius: 0 4px 4px 0;
+  margin-bottom: .85rem;
+  line-height: 1.4;
+}
+.pkg-card__ideal strong {
+  color: var(--gold-700);
+  display: block;
+  font-size: .72rem;
+  text-transform: uppercase;
+  letter-spacing: .05em;
+  margin-bottom: .2rem;
 }
 .pkg-card__features {
   list-style: none;
