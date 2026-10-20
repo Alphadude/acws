@@ -309,7 +309,7 @@ function handleVendorSubmit(e) {
   }
 
   if (!boothInput.value) {
-    showFieldError('vnd-booth-pref', 'Please select your stand placement preference');
+    showFieldError('vnd-booth-pref', 'Please select your preferred package');
     isValid = false;
   }
 
