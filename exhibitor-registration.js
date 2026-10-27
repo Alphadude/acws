@@ -260,7 +260,21 @@ document.addEventListener('DOMContentLoaded', () => {
     const website = document.getElementById('reg-website').value.trim();
     const weddingVolume = document.getElementById('reg-wedding-volume').value;
     const typicalSpend = document.getElementById('reg-typical-spend').value;
-    const paymentTier = packageChecked.value;
+    
+    // Normalize payment tier to match backend validation enum: ['standard', 'premium', 'catwalk', 'executive']
+    const rawTier = (packageChecked.value || '').trim();
+    const tierDisplay = packageChecked.getAttribute('data-display') || rawTier;
+    let paymentTier = 'standard';
+    const lowerTier = rawTier.toLowerCase();
+    if (lowerTier === 'catwalk' || lowerTier.includes('runway') || lowerTier.includes('catwalk')) {
+      paymentTier = 'catwalk';
+    } else if (lowerTier === 'premium' || lowerTier.includes('signature') || lowerTier.includes('premium')) {
+      paymentTier = 'premium';
+    } else if (lowerTier === 'executive' || lowerTier.includes('executive')) {
+      paymentTier = 'executive';
+    } else {
+      paymentTier = 'standard';
+    }
 
     // Configurable API base with default to live Render backend
     const API_BASE = window.ACWS_API_BASE || 'https://acwsbackend.onrender.com/api/v1';
@@ -345,7 +359,7 @@ document.addEventListener('DOMContentLoaded', () => {
       document.getElementById('rec-phone').textContent = phone;
       document.getElementById('rec-instagram').textContent = instagram;
       document.getElementById('rec-category').textContent = category;
-      document.getElementById('rec-package').textContent = paymentTier.toUpperCase();
+      document.getElementById('rec-package').textContent = tierDisplay;
       document.getElementById('rec-marketing').textContent = marketingConsent
         ? 'Granted (Email/SMS updates)'
         : 'Declined (Administrative only)';
