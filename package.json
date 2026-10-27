@@ -5,6 +5,7 @@
   "private": true,
   "scripts": {
     "build": "echo 'Static site: No compilation required'",
+    "deploy": "echo 'Static deployment: No compilation required'",
     "start": "npx serve ."
   },
   "keywords": [],
