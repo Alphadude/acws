@@ -4,8 +4,9 @@
   "description": "African & Caribbean Wedding Show 2027 London Website",
   "private": true,
   "scripts": {
-    "build": "echo 'Static site: No compilation required'",
-    "start": "npx serve ."
+    "build": "mkdir -p dist && cp -r index.html exhibitor-registration.html styles.css app.js exhibitor-registration.js assets dist/",
+    "deploy": "echo 'Deploy handled by Cloudflare'",
+    "start": "npx serve dist"
   },
   "keywords": [],
   "author": "ACWS",
