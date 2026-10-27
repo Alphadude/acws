@@ -246,7 +246,7 @@ document.addEventListener('DOMContentLoaded', () => {
       return;
     }
 
-    // --- 5. Form Submission Processing ---
+    // --- 5. Form Submission with Backend Integration ---
     const submitBtn = document.getElementById('btn-submit-attendee');
     const originalBtnText = submitBtn.innerHTML;
     submitBtn.disabled = true;
@@ -257,81 +257,72 @@ document.addEventListener('DOMContentLoaded', () => {
     const ticketType = ticketChecked.value;
     const ticketPrice = ticketChecked.getAttribute('data-price') || '£20';
 
-    const chars = 'ABCDEFGHJKLMNPQRSTUVWXYZ23456789';
-    let rand = '';
-    for (let i = 0; i < 4; i++) {
-      rand += chars.charAt(Math.floor(Math.random() * chars.length));
-    }
-    const refCode = `ACWS-2027-ATT-${rand}`;
-    const submissionDate = new Date().toLocaleString('en-GB', {
-      dateStyle: 'medium',
-      timeStyle: 'short'
-    });
-
-    const attendeeData = {
-      refCode,
+    const submissionPayload = {
       fullName,
       email,
       attendeeType,
-      weddingTimeframe: weddingTimeframe || 'N/A (Non-couple ticket)',
-      weddingLocation: weddingLocation || 'N/A (Non-couple ticket)',
-      weddingBudget,
-      guestCount,
+      weddingTimeframe: weddingTimeframe || '',
+      weddingLocation: weddingLocation || '',
+      weddingBudget: weddingBudget || 'Not specified',
+      guestCount: guestCount || 'Not specified',
       servicesNeeded,
-      culturalInfluences: culturalInfluences.length ? culturalInfluences : ['None specified'],
-      discoveryChannel,
+      culturalInfluences,
+      discoveryChannel: discoveryChannel || 'Instagram',
       ticketType,
       ticketPrice,
       privacyAcknowledged: true,
       marketingConsent,
-      partnerConsent,
-      registeredAt: submissionDate
+      partnerConsent
     };
 
-    // Live API transmission with localStorage fallback
+    // Configurable API base with default to live Render backend
     const API_BASE = window.ACWS_API_BASE || 'https://acwsbackend.onrender.com/api/v1';
 
     try {
-      // Attempt backend post if available
-      let serverConfirmedRef = refCode;
-      try {
-        const response = await fetch(`${API_BASE}/attendees`, {
-          method: 'POST',
-          headers: {
-            'Content-Type': 'application/json',
-            'Accept': 'application/json'
-          },
-          body: JSON.stringify({
-            fullName,
-            email,
-            ticketType: ticketType === 'VIP' ? 'vip' : 'standard',
-            weddingDate: weddingTimeframe,
-            ...attendeeData
-          })
-        });
+      const response = await fetch(`${API_BASE}/attendees`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          'Accept': 'application/json'
+        },
+        body: JSON.stringify(submissionPayload)
+      });
 
-        if (response.ok) {
-          const resJson = await response.json().catch(() => null);
-          if (resJson && resJson.data && resJson.data.refCode) {
-            serverConfirmedRef = resJson.data.refCode;
-          }
+      const resJson = await response.json().catch(() => null);
+
+      if (!response.ok) {
+        let errorMsg = 'Failed to confirm ticket reservation. Please review your details and try again.';
+        if (resJson && resJson.message) {
+          errorMsg = resJson.message;
+        } else if (resJson && Array.isArray(resJson.errors) && resJson.errors.length) {
+          errorMsg = resJson.errors.map(e => e.message || e).join('. ');
         }
-      } catch (netErr) {
-        // Fallback to local storage persistence
-        console.warn('Backend attendee endpoint unavailable, saving to local storage', netErr);
+        throw new Error(errorMsg);
       }
 
-      // Save to localStorage for client-side persistence
+      const responseData = (resJson && resJson.data) || {};
+      const attendeeRecord = responseData.attendee || responseData;
+      const refCode = responseData.refCode || attendeeRecord.refCode || ('ACWS-2027-ATT-' + Math.floor(1000 + Math.random() * 9000));
+      const submissionDate = attendeeRecord.registeredAt
+        ? new Date(attendeeRecord.registeredAt).toLocaleString('en-GB', { dateStyle: 'medium', timeStyle: 'short' })
+        : new Date().toLocaleString('en-GB', { dateStyle: 'medium', timeStyle: 'short' });
+
+      // Save to localStorage as a client-side backup
       try {
         const existing = JSON.parse(localStorage.getItem('acws_attendee_registrations') || '[]');
-        existing.push({ ...attendeeData, refCode: serverConfirmedRef });
+        existing.push({
+          ...submissionPayload,
+          refCode,
+          id: attendeeRecord._id || null,
+          registeredAt: submissionDate
+        });
         localStorage.setItem('acws_attendee_registrations', JSON.stringify(existing));
       } catch (storageErr) {
         console.warn('Storage unavailable', storageErr);
       }
 
-      // Populate summary receipt
-      document.getElementById('receipt-ref').textContent = serverConfirmedRef;
+      // Populate summary receipt with live server data
+      document.getElementById('receipt-ref').textContent = refCode;
       document.getElementById('rec-full-name').textContent = fullName;
       document.getElementById('rec-email').textContent = email;
       document.getElementById('rec-type').textContent = attendeeType;
@@ -345,18 +336,18 @@ document.addEventListener('DOMContentLoaded', () => {
       document.getElementById('rec-partners').textContent = partnerConsent ? 'Granted (Partner offers)' : 'Declined';
       document.getElementById('rec-timestamp').textContent = submissionDate;
 
-      // Transition to success card
+      // Transition to success receipt view
       form.style.display = 'none';
       const successCard = document.getElementById('submission-success');
       successCard.style.display = 'block';
       successCard.scrollIntoView({ behavior: 'smooth', block: 'start' });
 
-      showToast('Registration Confirmed!', `Pass Reference: ${serverConfirmedRef}`);
+      showToast('Registration Confirmed!', `Pass Reference: ${refCode}`);
     } catch (err) {
       console.error('Registration error:', err);
       submitBtn.disabled = false;
       submitBtn.innerHTML = originalBtnText;
-      showToast('Registration Issue', err.message || 'Something went wrong. Please try again.', true);
+      showToast('Registration Issue', err.message || 'Unable to connect to the server. Please check your internet connection.', true);
     }
   });
 });
