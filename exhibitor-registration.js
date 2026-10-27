@@ -133,7 +133,7 @@ document.addEventListener('DOMContentLoaded', () => {
   }
 
   // --- 5. Form Submit Handler ---
-  form.addEventListener('submit', (e) => {
+  form.addEventListener('submit', async (e) => {
     e.preventDefault();
     clearAllErrors();
 
@@ -250,10 +250,11 @@ document.addEventListener('DOMContentLoaded', () => {
       return;
     }
 
-    // --- 6. Form Submission Success Processing ---
+    // --- 6. Form Submission with Live Backend Integration ---
     const submitBtn = document.getElementById('btn-submit-registration');
+    const originalBtnText = submitBtn.innerHTML;
     submitBtn.disabled = true;
-    submitBtn.textContent = 'Processing Application...';
+    submitBtn.textContent = 'Submitting Application...';
 
     const marketingConsent = document.getElementById('reg-consent-marketing').checked;
     const website = document.getElementById('reg-website').value.trim();
@@ -261,14 +262,10 @@ document.addEventListener('DOMContentLoaded', () => {
     const typicalSpend = document.getElementById('reg-typical-spend').value;
     const paymentTier = packageChecked.value;
 
-    const refCode = 'ACWS-2027-VND-' + Math.floor(10000 + Math.random() * 90000);
-    const submissionDate = new Date().toLocaleString('en-GB', {
-      dateStyle: 'medium',
-      timeStyle: 'short'
-    });
+    // Configurable API base with default to live Render backend
+    const API_BASE = window.ACWS_API_BASE || 'https://acwsbackend.onrender.com/api/v1';
 
-    const submissionData = {
-      refCode,
+    const submissionPayload = {
       businessName,
       contactPerson,
       email,
@@ -285,39 +282,87 @@ document.addEventListener('DOMContentLoaded', () => {
       discoveryChannels,
       paymentTier,
       privacyAcknowledged: true,
-      marketingConsent,
-      submittedAt: submissionDate
+      marketingConsent
     };
 
-    // Save to localStorage for demo persistence
     try {
-      const existing = JSON.parse(localStorage.getItem('acws_vendor_submissions') || '[]');
-      existing.push(submissionData);
-      localStorage.setItem('acws_vendor_submissions', JSON.stringify(existing));
-    } catch (err) {
-      console.warn('Storage unavailable', err);
-    }
+      const response = await fetch(`${API_BASE}/vendors`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          'Accept': 'application/json'
+        },
+        body: JSON.stringify(submissionPayload)
+      });
 
-    // Populate receipt details
-    document.getElementById('receipt-ref').textContent = refCode;
-    document.getElementById('rec-business-name').textContent = businessName;
-    document.getElementById('rec-contact-name').textContent = contactPerson;
-    document.getElementById('rec-email').textContent = email;
-    document.getElementById('rec-phone').textContent = phone;
-    document.getElementById('rec-instagram').textContent = instagram;
-    document.getElementById('rec-category').textContent = category;
-    document.getElementById('rec-package').textContent = paymentTier;
-    document.getElementById('rec-marketing').textContent = marketingConsent ? 'Granted (Email/SMS updates)' : 'Declined (Administrative only)';
-    document.getElementById('rec-timestamp').textContent = submissionDate;
+      const result = await response.json().catch(() => null);
 
-    // Transition view
-    setTimeout(() => {
+      if (!response.ok) {
+        let errorMsg = 'Failed to submit application. Please review your details and try again.';
+        if (response.status === 409) {
+          errorMsg = (result && result.message) || `A vendor application with the email "${email}" already exists.`;
+          markError('err-email', 'reg-email', errorMsg);
+          const emailInput = document.getElementById('reg-email');
+          if (emailInput) {
+            emailInput.scrollIntoView({ behavior: 'smooth', block: 'center' });
+            emailInput.focus();
+          }
+        } else if (result && result.message) {
+          errorMsg = result.message;
+        } else if (result && Array.isArray(result.errors) && result.errors.length) {
+          errorMsg = result.errors.map(e => e.message || e).join('. ');
+        }
+        throw new Error(errorMsg);
+      }
+
+      // Extract server-provided confirmation details
+      const responseData = (result && result.data) || {};
+      const vendorData = responseData.vendor || responseData;
+      const refCode = responseData.refCode || vendorData.refCode || ('ACWS-2027-VND-' + Math.floor(10000 + Math.random() * 90000));
+      const submissionDate = vendorData.createdAt
+        ? new Date(vendorData.createdAt).toLocaleString('en-GB', { dateStyle: 'medium', timeStyle: 'short' })
+        : new Date().toLocaleString('en-GB', { dateStyle: 'medium', timeStyle: 'short' });
+
+      // Save to localStorage as a client-side backup
+      try {
+        const existing = JSON.parse(localStorage.getItem('acws_vendor_submissions') || '[]');
+        existing.push({
+          ...submissionPayload,
+          refCode,
+          submittedAt: submissionDate,
+          id: vendorData._id || null
+        });
+        localStorage.setItem('acws_vendor_submissions', JSON.stringify(existing));
+      } catch (storageErr) {
+        console.warn('Storage unavailable', storageErr);
+      }
+
+      // Populate confirmation receipt with live server data
+      document.getElementById('receipt-ref').textContent = refCode;
+      document.getElementById('rec-business-name').textContent = businessName;
+      document.getElementById('rec-contact-name').textContent = contactPerson;
+      document.getElementById('rec-email').textContent = email;
+      document.getElementById('rec-phone').textContent = phone;
+      document.getElementById('rec-instagram').textContent = instagram;
+      document.getElementById('rec-category').textContent = category;
+      document.getElementById('rec-package').textContent = paymentTier.toUpperCase();
+      document.getElementById('rec-marketing').textContent = marketingConsent
+        ? 'Granted (Email/SMS updates)'
+        : 'Declined (Administrative only)';
+      document.getElementById('rec-timestamp').textContent = submissionDate;
+
+      // Transition to success receipt view
       form.style.display = 'none';
       const successCard = document.getElementById('submission-success');
       successCard.style.display = 'block';
       successCard.scrollIntoView({ behavior: 'smooth', block: 'start' });
 
       showToast('Application Submitted!', `Reference: ${refCode}. Our curation team will review within 48 hours.`);
-    }, 600);
+    } catch (err) {
+      console.error('Vendor submission error:', err);
+      submitBtn.disabled = false;
+      submitBtn.innerHTML = originalBtnText;
+      showToast('Submission Issue', err.message || 'Network error connecting to the server. Please check your internet connection.', true);
+    }
   });
 });
