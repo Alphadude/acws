@@ -16,5 +16,9 @@ Thumbs.db
 # Antigravity Workspace Config
 .agents/
 
+# Dependencies & Build Output
+node_modules/
+dist/
+
 # Logs
 *.log
