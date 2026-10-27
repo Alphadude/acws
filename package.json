@@ -1,0 +1,13 @@
+{
+  "name": "acws",
+  "version": "1.0.0",
+  "description": "African & Caribbean Wedding Show 2027 London Website",
+  "private": true,
+  "scripts": {
+    "build": "echo 'Static site: No compilation required'",
+    "start": "npx serve ."
+  },
+  "keywords": [],
+  "author": "ACWS",
+  "license": "ISC"
+}
