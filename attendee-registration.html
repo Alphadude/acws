@@ -1,0 +1,762 @@
+<!DOCTYPE html>
+<html lang="en-GB">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Attendee &amp; Couple Registration | ACWS 2027 London</title>
+  <meta name="description" content="Register your visitor tickets or couple registration for the African & Caribbean Wedding Show 2027 at St John's Church, Hyde Park, London. Sunday 7th March 2027." />
+  <meta name="theme-color" content="#000000" />
+
+  <!-- Apple San Francisco Typeface Stack & Master Design System -->
+  <link rel="stylesheet" href="styles.css?v=20" />
+</head>
+<body class="reg-page">
+
+  <a class="skip-link" href="#main-reg">Skip to attendee registration form</a>
+
+  <!-- ============================ HEADER ============================ -->
+  <header class="header">
+    <div class="header__bar">
+      <a class="brand" href="index.html#main" aria-label="ACWS — African &amp; Caribbean Wedding Show Homepage">
+        <span class="brand__mark" aria-hidden="true">ACWS</span>
+      </a>
+
+      <nav class="nav" id="primaryNav" aria-label="Primary Navigation">
+        <a href="index.html">← Back to Main Site</a>
+        <a href="index.html#about">The Show</a>
+        <a href="index.html#experience">Experience</a>
+        <a href="index.html#schedule">Schedule</a>
+        <a href="exhibitor-registration.html">Vendor Stand Application</a>
+        <a href="index.html#faq">FAQ</a>
+      </nav>
+
+      <div class="header__actions">
+        <a class="btn btn--gold header__cta" href="#attendee-registration-form">
+          <span class="cta-long">Register Tickets</span><span class="cta-short">Register</span>
+        </a>
+      </div>
+    </div>
+  </header>
+
+  <!-- ============================= HERO BANNER ============================= -->
+  <section class="reg-hero">
+    <div class="container">
+      <div class="reg-hero__badge">
+        <span>✦</span> ACWS 2027 · Ticket Buyer &amp; Couple Portal
+      </div>
+      <h1>Attendee Registration &amp; <em>Ticket Passes</em></h1>
+      <p class="reg-hero__lede">
+        Join over 2,000 intending couples, friends, and families celebrating modern multicultural bridal luxury, live fashion catwalks, and master wedding artisans at St John's Church, Hyde Park, London.
+      </p>
+
+      <div class="reg-hero__chips">
+        <span class="reg-hero__chip">🏛️ St John's Church, Hyde Park</span>
+        <span class="reg-hero__chip">📅 Sunday 7th March 2027</span>
+        <span class="reg-hero__chip">🎟️ General Admission, Couple &amp; VIP</span>
+        <span class="reg-hero__chip">🔒 UK GDPR &amp; ICO Compliant</span>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============================= MAIN CONTENT ============================= -->
+  <main id="main-reg" class="reg-main">
+    <div class="container">
+      <div class="reg-layout">
+
+        <!-- ================= FORM CARD ================= -->
+        <div class="reg-form-card" id="form-container">
+          
+          <!-- ATTENDEE FORM -->
+          <form id="attendee-registration-form" novalidate>
+
+            <!-- 1. ATTENDEE DETAILS -->
+            <fieldset class="reg-section">
+              <div class="reg-section-header">
+                <span class="reg-step-num">1</span>
+                <div>
+                  <legend class="reg-section-title">Attendee Details</legend>
+                  <p class="reg-section-desc">Please provide your primary contact details for ticket dispatch and registration verification.</p>
+                </div>
+              </div>
+
+              <div class="reg-field-grid">
+                <div class="form-group">
+                  <label class="form-label" for="att-full-name">Full Name <span class="req">*</span></label>
+                  <input type="text" id="att-full-name" name="fullName" class="form-control" placeholder="e.g. Ama Mensah" autocomplete="name" required />
+                  <span class="form-err" id="err-full-name"></span>
+                </div>
+
+                <div class="form-group">
+                  <label class="form-label" for="att-email">Email Address <span class="req">*</span></label>
+                  <input type="email" id="att-email" name="email" class="form-control" placeholder="ama.mensah@example.com" autocomplete="email" required />
+                  <span class="form-err" id="err-email"></span>
+                </div>
+              </div>
+            </fieldset>
+
+            <!-- 2. ATTENDEE TYPE -->
+            <fieldset class="reg-section">
+              <div class="reg-section-header">
+                <span class="reg-step-num">2</span>
+                <div>
+                  <legend class="reg-section-title">Attendee Type</legend>
+                  <p class="reg-section-desc">What best describes you?</p>
+                </div>
+              </div>
+
+              <div class="form-group">
+                <label class="form-label" for="att-type">Your Role / Attendance Type <span class="req">*</span></label>
+                <select id="att-type" name="attendeeType" class="form-control" required>
+                  <option value="" disabled selected>Select what best describes you</option>
+                  <option value="Bride">Bride</option>
+                  <option value="Groom">Groom</option>
+                  <option value="Engaged Couple">Engaged Couple</option>
+                  <option value="Partner/Fiancé(e)">Partner/Fiancé(e)</option>
+                  <option value="Family or Friend">Family or Friend</option>
+                  <option value="Wedding Professional">Wedding Professional</option>
+                  <option value="Other">Other</option>
+                </select>
+                <span class="form-err" id="err-attendee-type"></span>
+                <p class="form-hint" id="couple-hint" style="margin-top:.4rem; font-size:.84rem; color:var(--gold-600);">
+                  ℹ️ Intending couples (Bride, Groom, Engaged Couple, Partner) will be prompted for wedding planning specifics below.
+                </p>
+              </div>
+            </fieldset>
+
+            <!-- 3. PLANNED WEDDING TIMEFRAME -->
+            <fieldset class="reg-section" id="section-timeframe">
+              <div class="reg-section-header">
+                <span class="reg-step-num">3</span>
+                <div>
+                  <legend class="reg-section-title">Planned Wedding Timeframe</legend>
+                  <p class="reg-section-desc">When are you planning to get married? <span class="req" id="req-timeframe-tag">* (Required for intending couples)</span></p>
+                </div>
+              </div>
+
+              <div class="form-group">
+                <label class="form-label" for="att-timeframe">Estimated Wedding Date / Timeframe <span class="req" id="req-timeframe-star">*</span></label>
+                <select id="att-timeframe" name="weddingTimeframe" class="form-control">
+                  <option value="" disabled selected>Select planned timeframe</option>
+                  <option value="Within 6 months">Within 6 months</option>
+                  <option value="6-12 months">6–12 months</option>
+                  <option value="12-18 months">12–18 months</option>
+                  <option value="18-24 months">18–24 months</option>
+                  <option value="More than 2 years">More than 2 years</option>
+                  <option value="Date not decided">Date not decided</option>
+                </select>
+                <span class="form-err" id="err-timeframe"></span>
+              </div>
+            </fieldset>
+
+            <!-- 4. PLANNED WEDDING LOCATION -->
+            <fieldset class="reg-section" id="section-location">
+              <div class="reg-section-header">
+                <span class="reg-step-num">4</span>
+                <div>
+                  <legend class="reg-section-title">Planned Wedding Location</legend>
+                  <p class="reg-section-desc">Where are you planning to hold your wedding? <span class="req" id="req-location-tag">* (Required for intending couples)</span></p>
+                </div>
+              </div>
+
+              <div class="form-group">
+                <label class="form-label" for="att-location">Wedding Destination / Region <span class="req" id="req-location-star">*</span></label>
+                <select id="att-location" name="weddingLocation" class="form-control">
+                  <option value="" disabled selected>Select planned wedding region</option>
+                  <option value="London">London</option>
+                  <option value="Elsewhere in England">Elsewhere in England</option>
+                  <option value="Scotland">Scotland</option>
+                  <option value="Wales">Wales</option>
+                  <option value="Northern Ireland">Northern Ireland</option>
+                  <option value="Africa">Africa</option>
+                  <option value="Caribbean">Caribbean</option>
+                  <option value="Europe">Europe</option>
+                  <option value="Other Destination">Other Destination</option>
+                  <option value="Not decided">Not decided</option>
+                </select>
+                <span class="form-err" id="err-location"></span>
+              </div>
+            </fieldset>
+
+            <!-- 5. ESTIMATED WEDDING BUDGET -->
+            <fieldset class="reg-section">
+              <div class="reg-section-header">
+                <span class="reg-step-num">5</span>
+                <div>
+                  <legend class="reg-section-title">Estimated Wedding Budget</legend>
+                  <p class="reg-section-desc">What is your estimated total wedding budget? <span style="color:var(--mocha-400);">(Optional)</span></p>
+                </div>
+              </div>
+
+              <div class="form-group">
+                <label class="form-label" for="att-budget">Estimated Budget Range</label>
+                <select id="att-budget" name="weddingBudget" class="form-control">
+                  <option value="" selected>Select budget bracket (Optional)</option>
+                  <option value="Under £10,000">Under &pound;10,000</option>
+                  <option value="£10,000-£20,000">&pound;10,000 &ndash; &pound;20,000</option>
+                  <option value="£20,001-£30,000">&pound;20,001 &ndash; &pound;30,000</option>
+                  <option value="£30,001-£50,000">&pound;30,001 &ndash; &pound;50,000</option>
+                  <option value="£50,001-£75,000">&pound;50,001 &ndash; &pound;75,000</option>
+                  <option value="£75,000+">&pound;75,000+</option>
+                  <option value="Not decided">Not decided</option>
+                  <option value="Prefer not to say">Prefer not to say</option>
+                </select>
+              </div>
+            </fieldset>
+
+            <!-- 6. ESTIMATED GUEST COUNT -->
+            <fieldset class="reg-section">
+              <div class="reg-section-header">
+                <span class="reg-step-num">6</span>
+                <div>
+                  <legend class="reg-section-title">Estimated Guest Count</legend>
+                  <p class="reg-section-desc">Approximately how many guests are you planning for? <span style="color:var(--mocha-400);">(Optional)</span></p>
+                </div>
+              </div>
+
+              <div class="form-group">
+                <label class="form-label" for="att-guests">Approximate Guest Count</label>
+                <select id="att-guests" name="guestCount" class="form-control">
+                  <option value="" selected>Select guest count (Optional)</option>
+                  <option value="Under 50">Under 50</option>
+                  <option value="50-100">50 &ndash; 100</option>
+                  <option value="101-150">101 &ndash; 150</option>
+                  <option value="151-250">151 &ndash; 250</option>
+                  <option value="251-400">251 &ndash; 400</option>
+                  <option value="400+">400+</option>
+                  <option value="Not decided">Not decided</option>
+                </select>
+              </div>
+            </fieldset>
+
+            <!-- 7. WEDDING SERVICES CURRENTLY NEEDED -->
+            <fieldset class="reg-section" id="section-services">
+              <div class="reg-section-header">
+                <span class="reg-step-num">7</span>
+                <div>
+                  <legend class="reg-section-title">Wedding Services Currently Needed</legend>
+                  <p class="reg-section-desc">Which wedding products or services are you currently looking for? <span class="req" id="req-services-tag">* (Required for intending couples)</span></p>
+                </div>
+              </div>
+
+              <div class="form-group">
+                <label class="form-label">Select all services you are seeking: <span class="req" id="req-services-star">*</span></label>
+                <div class="pill-group" id="services-group">
+                  <label class="pill-choice">
+                    <input type="checkbox" name="servicesNeeded" value="Venue" />
+                    <span class="pill-choice__text">Venue</span>
+                  </label>
+                  <label class="pill-choice">
+                    <input type="checkbox" name="servicesNeeded" value="Bridalwear" />
+                    <span class="pill-choice__text">Bridalwear</span>
+                  </label>
+                  <label class="pill-choice">
+                    <input type="checkbox" name="servicesNeeded" value="Groomwear" />
+                    <span class="pill-choice__text">Groomwear</span>
+                  </label>
+                  <label class="pill-choice">
+                    <input type="checkbox" name="servicesNeeded" value="Wedding Planner" />
+                    <span class="pill-choice__text">Wedding Planner</span>
+                  </label>
+                  <label class="pill-choice">
+                    <input type="checkbox" name="servicesNeeded" value="Catering" />
+                    <span class="pill-choice__text">Catering</span>
+                  </label>
+                  <label class="pill-choice">
+                    <input type="checkbox" name="servicesNeeded" value="Cake/Desserts" />
+                    <span class="pill-choice__text">Cake / Desserts</span>
+                  </label>
+                  <label class="pill-choice">
+                    <input type="checkbox" name="servicesNeeded" value="Drinks" />
+                    <span class="pill-choice__text">Drinks / Bar</span>
+                  </label>
+                  <label class="pill-choice">
+                    <input type="checkbox" name="servicesNeeded" value="Décor/Styling" />
+                    <span class="pill-choice__text">Décor / Styling</span>
+                  </label>
+                  <label class="pill-choice">
+                    <input type="checkbox" name="servicesNeeded" value="Florist" />
+                    <span class="pill-choice__text">Florist</span>
+                  </label>
+                  <label class="pill-choice">
+                    <input type="checkbox" name="servicesNeeded" value="Photography" />
+                    <span class="pill-choice__text">Photography</span>
+                  </label>
+                  <label class="pill-choice">
+                    <input type="checkbox" name="servicesNeeded" value="Videography" />
+                    <span class="pill-choice__text">Videography</span>
+                  </label>
+                  <label class="pill-choice">
+                    <input type="checkbox" name="servicesNeeded" value="Hair" />
+                    <span class="pill-choice__text">Hair</span>
+                  </label>
+                  <label class="pill-choice">
+                    <input type="checkbox" name="servicesNeeded" value="Makeup/Beauty" />
+                    <span class="pill-choice__text">Makeup / Beauty</span>
+                  </label>
+                  <label class="pill-choice">
+                    <input type="checkbox" name="servicesNeeded" value="Jewellery/Accessories" />
+                    <span class="pill-choice__text">Jewellery / Accessories</span>
+                  </label>
+                  <label class="pill-choice">
+                    <input type="checkbox" name="servicesNeeded" value="DJ/Entertainment" />
+                    <span class="pill-choice__text">DJ / Entertainment</span>
+                  </label>
+                  <label class="pill-choice">
+                    <input type="checkbox" name="servicesNeeded" value="Live Music" />
+                    <span class="pill-choice__text">Live Music</span>
+                  </label>
+                  <label class="pill-choice">
+                    <input type="checkbox" name="servicesNeeded" value="Transport" />
+                    <span class="pill-choice__text">Transport</span>
+                  </label>
+                  <label class="pill-choice">
+                    <input type="checkbox" name="servicesNeeded" value="Invitations/Stationery" />
+                    <span class="pill-choice__text">Invitations / Stationery</span>
+                  </label>
+                  <label class="pill-choice">
+                    <input type="checkbox" name="servicesNeeded" value="Gifts/Favours" />
+                    <span class="pill-choice__text">Gifts / Favours</span>
+                  </label>
+                  <label class="pill-choice">
+                    <input type="checkbox" name="servicesNeeded" value="Honeymoon/Travel" />
+                    <span class="pill-choice__text">Honeymoon / Travel</span>
+                  </label>
+                  <label class="pill-choice">
+                    <input type="checkbox" name="servicesNeeded" value="Financial Services" />
+                    <span class="pill-choice__text">Financial Services</span>
+                  </label>
+                  <label class="pill-choice">
+                    <input type="checkbox" name="servicesNeeded" value="Other" />
+                    <span class="pill-choice__text">Other</span>
+                  </label>
+                </div>
+                <span class="form-err" id="err-services"></span>
+              </div>
+            </fieldset>
+
+            <!-- 8. CULTURAL WEDDING INFLUENCES -->
+            <fieldset class="reg-section">
+              <div class="reg-section-header">
+                <span class="reg-step-num">8</span>
+                <div>
+                  <legend class="reg-section-title">Cultural Wedding Influences</legend>
+                  <p class="reg-section-desc">Which cultural traditions or influences are you planning to incorporate into your wedding? <span style="color:var(--mocha-400);">(Optional)</span></p>
+                </div>
+              </div>
+
+              <div class="form-group">
+                <label class="form-label">Cultural traditions to include:</label>
+                <div class="pill-group" id="influences-group">
+                  <label class="pill-choice">
+                    <input type="checkbox" name="culturalInfluences" value="African" />
+                    <span class="pill-choice__text">African</span>
+                  </label>
+                  <label class="pill-choice">
+                    <input type="checkbox" name="culturalInfluences" value="Caribbean" />
+                    <span class="pill-choice__text">Caribbean</span>
+                  </label>
+                  <label class="pill-choice">
+                    <input type="checkbox" name="culturalInfluences" value="African & Caribbean" />
+                    <span class="pill-choice__text">African &amp; Caribbean</span>
+                  </label>
+                  <label class="pill-choice">
+                    <input type="checkbox" name="culturalInfluences" value="British" />
+                    <span class="pill-choice__text">British</span>
+                  </label>
+                  <label class="pill-choice">
+                    <input type="checkbox" name="culturalInfluences" value="Mixed-Heritage/Multicultural" />
+                    <span class="pill-choice__text">Mixed-Heritage / Multicultural</span>
+                  </label>
+                  <label class="pill-choice">
+                    <input type="checkbox" name="culturalInfluences" value="Other" />
+                    <span class="pill-choice__text">Other</span>
+                  </label>
+                  <label class="pill-choice">
+                    <input type="checkbox" name="culturalInfluences" value="Prefer not to say" />
+                    <span class="pill-choice__text">Prefer not to say</span>
+                  </label>
+                </div>
+              </div>
+            </fieldset>
+
+            <!-- 9. HOW YOU HEARD ABOUT ACWS -->
+            <fieldset class="reg-section">
+              <div class="reg-section-header">
+                <span class="reg-step-num">9</span>
+                <div>
+                  <legend class="reg-section-title">How You Heard About ACWS</legend>
+                  <p class="reg-section-desc">Help us understand our community reach. How did you hear about ACWS? <span class="req">*</span></p>
+                </div>
+              </div>
+
+              <div class="form-group">
+                <label class="form-label" for="att-discovery">Discovery Channel <span class="req">*</span></label>
+                <select id="att-discovery" name="discoveryChannel" class="form-control" required>
+                  <option value="" disabled selected>Select discovery source</option>
+                  <option value="Instagram">Instagram</option>
+                  <option value="TikTok">TikTok</option>
+                  <option value="Facebook">Facebook</option>
+                  <option value="Google/Search">Google / Search</option>
+                  <option value="Friend or Family">Friend or Family</option>
+                  <option value="Vendor">Vendor</option>
+                  <option value="Influencer/Creator">Influencer / Creator</option>
+                  <option value="Media Partner">Media Partner</option>
+                  <option value="Sponsor/Brand">Sponsor / Brand</option>
+                  <option value="Email">Email</option>
+                  <option value="Other">Other</option>
+                </select>
+                <span class="form-err" id="err-discovery"></span>
+              </div>
+            </fieldset>
+
+            <!-- 10. TICKET TYPE SELECTION -->
+            <fieldset class="reg-section">
+              <div class="reg-section-header">
+                <span class="reg-step-num">10</span>
+                <div>
+                  <legend class="reg-section-title">Ticket Type</legend>
+                  <p class="reg-section-desc">Which ticket type are you purchasing? <span class="req">*</span></p>
+                </div>
+              </div>
+
+              <div class="pkg-grid" id="ticket-selector">
+                
+                <!-- GENERAL ADMISSION -->
+                <label class="pkg-card" for="ticket-general">
+                  <input type="radio" id="ticket-general" name="ticketType" value="General Admission" data-price="£20" checked required />
+                  <div class="pkg-card__inner">
+                    <span class="pkg-card__badge">Standard Entry</span>
+                    <h4 class="pkg-card__title">General Admission</h4>
+                    <div class="pkg-card__price">&pound;20 <small>per person</small></div>
+                    <p class="pkg-card__desc">Full access to exhibition halls, live runway presentations, workshops &amp; artisan stalls.</p>
+                    <ul class="pkg-card__features">
+                      <li>Full exhibition day entry (12:00 &ndash; 20:00)</li>
+                      <li>Access to all live catwalk shows</li>
+                      <li>Official event program &amp; directory</li>
+                      <li>Entry to prize draws &amp; workshops</li>
+                    </ul>
+                  </div>
+                </label>
+
+                <!-- COUPLE TICKET -->
+                <label class="pkg-card" for="ticket-couple">
+                  <input type="radio" id="ticket-couple" name="ticketType" value="Couple Ticket" data-price="£35" required />
+                  <div class="pkg-card__inner">
+                    <span class="pkg-card__badge" style="background:#8A6A1C; color:#FFF;">Best for 2</span>
+                    <h4 class="pkg-card__title">Couple Ticket</h4>
+                    <div class="pkg-card__price">&pound;35 <small>admits 2</small></div>
+                    <p class="pkg-card__desc">Discounted joint pass for intending couples, fiancé(e)s or planning partners.</p>
+                    <ul class="pkg-card__features">
+                      <li>Entry for two attendees</li>
+                      <li>Complimentary ACWS Bridal Planning Journal</li>
+                      <li>Access to all runway sessions</li>
+                      <li>Exclusive wedding supplier discount codes</li>
+                    </ul>
+                  </div>
+                </label>
+
+                <!-- VIP EXPERIENCE -->
+                <label class="pkg-card" for="ticket-vip">
+                  <input type="radio" id="ticket-vip" name="ticketType" value="VIP" data-price="£55" required />
+                  <div class="pkg-card__inner">
+                    <span class="pkg-card__badge">Front-Row Luxury</span>
+                    <h4 class="pkg-card__title">VIP Royal Experience</h4>
+                    <div class="pkg-card__price">&pound;55 <small>per person</small></div>
+                    <p class="pkg-card__desc">Fast-track admission, front-row catwalk seats, champagne &amp; luxury gift bag.</p>
+                    <ul class="pkg-card__features">
+                      <li>Fast-track VIP priority entry</li>
+                      <li>Reserved front-row catwalk runway seats</li>
+                      <li>Complimentary chilled champagne on arrival</li>
+                      <li>Deluxe gift bag filled with luxury treats (&pound;120+ value)</li>
+                      <li>Exclusive VIP lounge access</li>
+                    </ul>
+                  </div>
+                </label>
+
+              </div>
+              <span class="form-err" id="err-ticket-type"></span>
+            </fieldset>
+
+            <!-- 11. DATA PROTECTION & CONSENT (UK GDPR COMPLIANT) -->
+            <fieldset class="reg-section">
+              <div class="reg-section-header">
+                <span class="reg-step-num">11</span>
+                <div>
+                  <legend class="reg-section-title">Data Protection &amp; Consent</legend>
+                  <p class="reg-section-desc">In compliance with UK GDPR and Data Protection Act 2018. Marketing permissions are optional and separate from ticket purchase.</p>
+                </div>
+              </div>
+
+              <div class="consent-card">
+                
+                <!-- 1. REQUIRED PRIVACY ACKNOWLEDGEMENT -->
+                <div class="consent-item">
+                  <input type="checkbox" id="reg-consent-privacy" name="privacyAcknowledgement" required />
+                  <label for="reg-consent-privacy">
+                    <span class="consent-tag consent-tag--req">REQUIRED</span>
+                    <span class="consent-text">
+                      <strong>Privacy Acknowledgement:</strong> I confirm that I have read the <a href="#privacy-notice" style="color:var(--gold-700); text-decoration:underline;">ACWS Privacy Notice</a> and understand that the personal information I provide will be processed for ticket administration, event management, attendee communications, safety and security, and other purposes described in the Privacy Notice.
+                    </span>
+                  </label>
+                  <span class="form-err" id="err-consent-privacy"></span>
+                </div>
+
+                <!-- 2. OPTIONAL ACWS MARKETING -->
+                <div class="consent-item" style="border-top:1px solid rgba(0,0,0,0.06); padding-top:1rem; margin-top:1rem;">
+                  <input type="checkbox" id="reg-consent-marketing" name="marketingConsent" />
+                  <label for="reg-consent-marketing">
+                    <span class="consent-tag" style="background:#EBF5FB; color:#1B4F72;">OPTIONAL</span>
+                    <span class="consent-text">
+                      <strong>ACWS Updates &amp; Inspiration:</strong> Yes, I would like to receive updates from the African &amp; Caribbean Wedding Show about future events, wedding inspiration, offers, competitions and related opportunities. I understand that I can withdraw my consent or unsubscribe at any time.
+                    </span>
+                  </label>
+                </div>
+
+                <!-- 3. OPTIONAL SELECTED PARTNER COMMUNICATIONS -->
+                <div class="consent-item" style="border-top:1px solid rgba(0,0,0,0.06); padding-top:1rem; margin-top:1rem;">
+                  <input type="checkbox" id="reg-consent-partners" name="partnerConsent" />
+                  <label for="reg-consent-partners">
+                    <span class="consent-tag" style="background:#F4ECF7; color:#5B2C6F;">OPTIONAL</span>
+                    <span class="consent-text">
+                      <strong>Selected Partner Communications:</strong> Yes, I would like to receive relevant offers and information from selected ACWS partners. Where my personal information will be shared directly with another organisation for its own marketing, ACWS will identify that organisation and explain how my information will be used before I agree.
+                    </span>
+                  </label>
+                </div>
+
+              </div>
+            </fieldset>
+
+            <!-- SUBMIT BUTTON -->
+            <div class="reg-submit-area">
+              <button class="btn btn--gold btn--block btn--lg" type="submit" id="btn-submit-attendee">
+                Complete Registration &amp; Confirm Passes
+              </button>
+              <p class="form-privacy-note">
+                🔒 Strictly confidential · Instant digital ticket confirmation · Pass details delivered via email.
+              </p>
+            </div>
+
+          </form>
+
+          <!-- ================= SUCCESS CONFIRMATION RECEIPT ================= -->
+          <div class="reg-success" id="submission-success" style="display:none;">
+            <div class="reg-success__icon">✓</div>
+            <h2>Registration Confirmed!</h2>
+            <p style="color:var(--mocha-400); font-size:1.05rem; margin-bottom:1.5rem;">
+              Thank you for registering for the African &amp; Caribbean Wedding Show 2027. Your pass has been reserved and your reference code is displayed below.
+            </p>
+
+            <div>
+              <span class="reg-success__ref" id="receipt-ref">ACWS-2027-ATT-XXXX</span>
+            </div>
+
+            <div class="reg-success__receipt">
+              <h4 style="font-family:var(--font-display); font-size:1.3rem; margin-bottom:1rem; color:var(--espresso-950);">
+                Attendee Pass Summary Receipt
+              </h4>
+              <table class="receipt-table">
+                <tbody>
+                  <tr>
+                    <th>Attendee Name:</th>
+                    <td id="rec-full-name">—</td>
+                  </tr>
+                  <tr>
+                    <th>Email Address:</th>
+                    <td id="rec-email">—</td>
+                  </tr>
+                  <tr>
+                    <th>Attendee Type:</th>
+                    <td id="rec-type">—</td>
+                  </tr>
+                  <tr>
+                    <th>Ticket Package:</th>
+                    <td id="rec-ticket-type">—</td>
+                  </tr>
+                  <tr>
+                    <th>Wedding Timeframe:</th>
+                    <td id="rec-timeframe">—</td>
+                  </tr>
+                  <tr>
+                    <th>Wedding Location:</th>
+                    <td id="rec-location">—</td>
+                  </tr>
+                  <tr>
+                    <th>Estimated Budget:</th>
+                    <td id="rec-budget">—</td>
+                  </tr>
+                  <tr>
+                    <th>Services Needed:</th>
+                    <td id="rec-services">—</td>
+                  </tr>
+                  <tr>
+                    <th>Cultural Influences:</th>
+                    <td id="rec-influences">—</td>
+                  </tr>
+                  <tr>
+                    <th>Marketing Permissions:</th>
+                    <td id="rec-marketing">—</td>
+                  </tr>
+                  <tr>
+                    <th>Partner Communications:</th>
+                    <td id="rec-partners">—</td>
+                  </tr>
+                  <tr>
+                    <th>Registration Timestamp:</th>
+                    <td id="rec-timestamp">—</td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+
+            <div style="display:flex; justify-content:center; gap:1rem; flex-wrap:wrap; margin-top:2rem;">
+              <button class="btn btn--ghost-gold" type="button" onclick="window.print()">
+                🖨️ Print / Save Pass Receipt
+              </button>
+              <a class="btn btn--gold" href="index.html">
+                Return to ACWS Homepage
+              </a>
+            </div>
+          </div>
+
+        </div>
+
+        <!-- ================= STICKY SIDEBAR ================= -->
+        <aside class="reg-sidebar">
+          
+          <!-- EVENT DETAILS PANEL -->
+          <div class="sidebar-panel">
+            <h3>Event At A Glance</h3>
+            <ul class="show-meta-list">
+              <li>
+                <span class="show-meta-icon">📅</span>
+                <div>
+                  <strong>Sunday 7th March 2027</strong>
+                  12:00 PM – 8:00 PM GMT
+                </div>
+              </li>
+              <li>
+                <span class="show-meta-icon">🏛️</span>
+                <div>
+                  <strong>St John's Church, Hyde Park</strong>
+                  Hyde Park Crescent, London W2 2QD
+                </div>
+              </li>
+              <li>
+                <span class="show-meta-icon">👗</span>
+                <div>
+                  <strong>Runway Catwalk Shows</strong>
+                  High-fashion bridal &amp; groom collections
+                </div>
+              </li>
+              <li>
+                <span class="show-meta-icon">✨</span>
+                <div>
+                  <strong>20+ Curated Artisans</strong>
+                  Catering, photography, cakes, beauty &amp; decor
+                </div>
+              </li>
+            </ul>
+          </div>
+
+          <!-- OFFICIAL FLYER PREVIEW -->
+          <div class="sidebar-panel" style="padding:1rem;">
+            <figure class="plate" style="margin:0;">
+              <img src="assets/img/exhibitor-poster.jpg" width="682" height="1024"
+                   alt="ACWS London 2027 Official Flyer — Sunday 7th March 2027 at St John's Church Hyde Park London" />
+            </figure>
+          </div>
+
+          <!-- PUBLISHED ACWS PRIVACY NOTICE -->
+          <div class="sidebar-panel" id="privacy-notice">
+            <h3>ACWS Privacy Notice</h3>
+            <div class="privacy-notice-content">
+              <p>
+                <strong>Controller Identity:</strong> African &amp; Caribbean Wedding Show (ACWS UK). Contact: <a href="mailto:privacy@africancaribbeanweddings.co.uk" style="color:var(--gold-700); text-decoration:underline;">privacy@africancaribbeanweddings.co.uk</a>.
+              </p>
+              
+              <h4>1. Purposes &amp; Lawful Bases</h4>
+              <ul>
+                <li><strong>Ticket Administration &amp; Access:</strong> Managing registrations, issuing digital entry passes, and event safety (UK GDPR Art. 6(1)(b) &amp; Art. 6(1)(c)).</li>
+                <li><strong>Event Administration &amp; Curation:</strong> Planning venue capacity, runway logistics, and customer support (UK GDPR Art. 6(1)(f)).</li>
+                <li><strong>Electronic Marketing:</strong> Optional promotional updates based strictly on affirmative, opt-in consent (UK GDPR Art. 6(1)(a)).</li>
+                <li><strong>Selected Partner Sharing:</strong> Optional partner introductions strictly when you have provided explicit affirmative consent (UK GDPR Art. 6(1)(a)).</li>
+              </ul>
+
+              <h4>2. Retention &amp; Rights</h4>
+              <p>
+                Attendee contact records are retained for the show cycle and required statutory accounting records. You have the right to request access, rectification, or erasure of your data, or withdraw marketing consent at any time.
+              </p>
+              <p>
+                You also have the right to lodge a complaint with the <strong>Information Commissioner's Office (ICO)</strong> at <a href="https://ico.org.uk" target="_blank" rel="noopener noreferrer" style="color:var(--gold-700); text-decoration:underline;">ico.org.uk</a>.
+              </p>
+            </div>
+          </div>
+
+        </aside>
+
+      </div>
+    </div>
+  </main>
+
+  <!-- ============================= FOOTER ============================= -->
+  <footer class="footer">
+    <div class="container footer__grid">
+      <div class="footer__col">
+        <a class="brand" href="index.html#main" style="margin-bottom:1rem;">
+          <span class="brand__mark" aria-hidden="true">ACWS</span>
+          <div>
+            <span class="brand__name">African &amp; <b>Caribbean</b></span>
+            <span class="brand__sub">Wedding Show London</span>
+          </div>
+        </a>
+        <p class="footer__text">
+          The UK's premier luxury multicultural bridal showcase. Curating excellence, culture, and love.
+        </p>
+      </div>
+
+      <div class="footer__col">
+        <h4 class="footer__heading">Quick Links</h4>
+        <ul class="footer__nav">
+          <li><a href="index.html">Main Website</a></li>
+          <li><a href="exhibitor-registration.html">Vendor Stand Application</a></li>
+          <li><a href="index.html#experience">The Experience</a></li>
+          <li><a href="index.html#faq">Frequently Asked Questions</a></li>
+        </ul>
+      </div>
+
+      <div class="footer__col">
+        <h4 class="footer__heading">Event Day</h4>
+        <p class="footer__text">
+          Sunday 7th March 2027<br />
+          12:00 PM &ndash; 8:00 PM<br />
+          St John's Church, Hyde Park<br />
+          London, W2 2QD
+        </p>
+      </div>
+
+      <div class="footer__col">
+        <h4 class="footer__heading">Legal &amp; Privacy</h4>
+        <p class="footer__text" style="font-size:0.82rem;">
+          Data controller: ACWS UK.<br />
+          In compliance with UK GDPR &amp; Data Protection Act 2018.<br />
+          ICO Registered Data Controller.
+        </p>
+      </div>
+    </div>
+
+    <div class="container footer__bar">
+      <p>&copy; 2026&ndash;2027 African &amp; Caribbean Wedding Show. All rights reserved.</p>
+      <div class="footer__legal">
+        <a href="#privacy-notice">Privacy Notice</a>
+        <a href="index.html">Terms of Participation</a>
+      </div>
+    </div>
+  </footer>
+
+  <!-- Toast Stack -->
+  <div class="toast-stack" id="toast-stack" aria-live="polite" aria-atomic="true"></div>
+
+  <!-- Attendee Registration Script Logic -->
+  <script src="attendee-registration.js"></script>
+</body>
+</html>
