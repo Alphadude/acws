@@ -1,18 +1,30 @@
 /**
  * ACWS — Attendee & Couple Registration Logic
  * Handles interactive ticket selection, conditional validation for intending couples,
- * multi-select pills, UK GDPR consent compliance, and confirmation pass generation.
+ * multi-select pills, UK GDPR consent compliance, dynamic attendee pass badge generation,
+ * QR code embedding, and one-click pass receipt image download.
  */
 
 document.addEventListener('DOMContentLoaded', () => {
   const form = document.getElementById('attendee-registration-form');
   if (!form) return;
 
+  const nameInput = document.getElementById('att-full-name');
+  const emailInput = document.getElementById('att-email');
+  const phoneInput = document.getElementById('att-phone');
+  const instagramInput = document.getElementById('att-instagram');
   const attendeeTypeSelect = document.getElementById('att-type');
   const timeframeSelect = document.getElementById('att-timeframe');
   const locationSelect = document.getElementById('att-location');
   const discoverySelect = document.getElementById('att-discovery');
   const consentPrivacy = document.getElementById('reg-consent-privacy');
+
+  // Preload clean pass badge background template
+  const passTemplateImg = new Image();
+  passTemplateImg.crossOrigin = 'anonymous';
+  passTemplateImg.src = 'assets/img/attendee-pass-clean.png';
+
+  let currentAttendeePassData = null;
 
   // --- 1. Helper: Determine if selected attendee is an intending couple ---
   function isIntendingCouple(type) {
@@ -73,14 +85,20 @@ document.addEventListener('DOMContentLoaded', () => {
     document.querySelectorAll('.form-err').forEach(el => el.textContent = '');
   }
 
-  const nameInput = document.getElementById('att-full-name');
   if (nameInput) {
     nameInput.addEventListener('input', () => clearError('err-full-name'));
   }
 
-  const emailInput = document.getElementById('att-email');
   if (emailInput) {
     emailInput.addEventListener('input', () => clearError('err-email'));
+  }
+
+  if (phoneInput) {
+    phoneInput.addEventListener('input', () => clearError('err-phone'));
+  }
+
+  if (instagramInput) {
+    instagramInput.addEventListener('input', () => clearError('err-instagram'));
   }
 
   if (timeframeSelect) {
@@ -147,7 +165,170 @@ document.addEventListener('DOMContentLoaded', () => {
     }[m]));
   }
 
-  // --- 4. Form Submission Handler ---
+  // --- 4. Pass Canvas Rendering & Generation Logic ---
+  async function renderPassToCanvas(canvas, data) {
+    if (!canvas) return;
+    const ctx = canvas.getContext('2d');
+    const width = 576;
+    const height = 864;
+    canvas.width = width;
+    canvas.height = height;
+
+    // Ensure template image is loaded
+    if (!passTemplateImg.complete || passTemplateImg.naturalWidth === 0) {
+      await new Promise(resolve => {
+        passTemplateImg.onload = resolve;
+        passTemplateImg.onerror = resolve;
+        setTimeout(resolve, 1500);
+      });
+    }
+
+    if (passTemplateImg.naturalWidth > 0) {
+      ctx.drawImage(passTemplateImg, 0, 0, width, height);
+    } else {
+      // Fallback background rendering
+      ctx.fillStyle = '#262525';
+      ctx.fillRect(0, 0, width, height);
+
+      // Title
+      ctx.fillStyle = '#FFFFFF';
+      ctx.font = '800 44px -apple-system, BlinkMacSystemFont, "SF Pro Display", "Space Grotesk", sans-serif';
+      ctx.fillText('ACWS 2027', 34, 120);
+
+      // Vertical ATTENDEE text
+      ctx.save();
+      ctx.translate(515, 432);
+      ctx.rotate(Math.PI / 2);
+      ctx.font = '900 68px -apple-system, BlinkMacSystemFont, "SF Pro Display", sans-serif';
+      ctx.textAlign = 'center';
+      ctx.fillText('ATTENDEE', 0, 0);
+      ctx.restore();
+    }
+
+    // Always cleanly wipe the dynamic contact area to the exact card background (#262525)
+    ctx.fillStyle = '#262525';
+    ctx.fillRect(30, 137, 415, 243);
+
+    // 1. Draw Full Name
+    const fullName = (data.fullName || 'Attendee').trim();
+    ctx.fillStyle = '#FFFFFF';
+    ctx.textAlign = 'left';
+    ctx.textBaseline = 'middle';
+
+    let nameFontSize = 42;
+    ctx.font = `800 ${nameFontSize}px -apple-system, BlinkMacSystemFont, "SF Pro Display", "Space Grotesk", sans-serif`;
+    while (ctx.measureText(fullName).width > 380 && nameFontSize > 20) {
+      nameFontSize -= 2;
+      ctx.font = `800 ${nameFontSize}px -apple-system, BlinkMacSystemFont, "SF Pro Display", "Space Grotesk", sans-serif`;
+    }
+    ctx.fillText(fullName, 36, 172);
+
+    // 2. Draw Email
+    const email = (data.email || '').trim();
+    ctx.fillStyle = '#F5F5F5';
+    let emailFontSize = 24;
+    ctx.font = `400 ${emailFontSize}px "Playfair Display", "Cormorant Garamond", Georgia, serif`;
+    while (ctx.measureText(email).width > 380 && emailFontSize > 14) {
+      emailFontSize -= 1;
+      ctx.font = `400 ${emailFontSize}px "Playfair Display", "Cormorant Garamond", Georgia, serif`;
+    }
+    ctx.fillText(email, 36, 235);
+
+    // 3. Draw Phone Number
+    const phone = (data.phone || '').trim();
+    ctx.fillStyle = '#F5F5F5';
+    ctx.font = '400 24px "Playfair Display", "Cormorant Garamond", Georgia, serif';
+    ctx.fillText(phone, 36, 281);
+
+    // 4. Draw Instagram Handle
+    let instagram = (data.instagram || '').trim();
+    if (instagram && !instagram.startsWith('@') && !instagram.startsWith('http')) {
+      instagram = '@' + instagram;
+    }
+    ctx.fillStyle = '#F5F5F5';
+    ctx.font = '400 24px "Playfair Display", "Cormorant Garamond", Georgia, serif';
+    ctx.fillText(instagram, 36, 334);
+
+    // 5. Solid White Container Box (x: 48, y: 392, w: 368, h: 448)
+    ctx.fillStyle = '#FFFFFF';
+    ctx.fillRect(48, 392, 368, 448);
+
+    // 6. Generate and Draw QR Code inside white box
+    const refCode = data.refCode || 'ACWS-2027-ATT';
+    const qrData = `https://africancaribbeanweddingshow.co.uk/verify?ref=${encodeURIComponent(refCode)}&name=${encodeURIComponent(fullName)}`;
+
+    if (window.QRCode) {
+      try {
+        const qr = new window.QRCode(null, {
+          text: qrData,
+          typeNumber: 0,
+          correctLevel: window.QRCode.CorrectLevel.M,
+          colorDark: '#1E1E1E',
+          colorLight: '#FFFFFF'
+        });
+
+        const qrSize = 290;
+        const qrX = Math.round(48 + (368 - qrSize) / 2); // 87
+        const qrY = 412;
+        qr.drawToCanvas(ctx, qrX, qrY, qrSize, qrSize);
+      } catch (qrErr) {
+        console.warn('QR code generation error:', qrErr);
+      }
+    }
+
+    // 7. Verification details underneath QR code in white box
+    ctx.textAlign = 'center';
+    ctx.textBaseline = 'alphabetic';
+
+    ctx.fillStyle = '#1E1E1E';
+    ctx.font = '700 15px "SF Mono", Menlo, Consolas, monospace';
+    ctx.fillText(refCode, 48 + 368 / 2, 735);
+
+    ctx.fillStyle = '#8A6A1C';
+    ctx.font = '700 12px -apple-system, BlinkMacSystemFont, "SF Pro Display", sans-serif';
+    const ticketTypeStr = ((data.ticketType || 'General Admission').toUpperCase()) + ' PASS';
+    ctx.fillText(ticketTypeStr, 48 + 368 / 2, 762);
+
+    ctx.fillStyle = '#777777';
+    ctx.font = '500 11px -apple-system, BlinkMacSystemFont, sans-serif';
+    ctx.fillText('Official Entry Pass · Present at Gate', 48 + 368 / 2, 786);
+  }
+
+  function downloadCanvasAsImage(canvas, filename) {
+    if (!canvas) return;
+    if (canvas.toBlob) {
+      canvas.toBlob(blob => {
+        if (!blob) {
+          fallbackDownload();
+          return;
+        }
+        const url = URL.createObjectURL(blob);
+        const a = document.createElement('a');
+        a.href = url;
+        a.download = filename;
+        document.body.appendChild(a);
+        a.click();
+        setTimeout(() => {
+          a.remove();
+          URL.revokeObjectURL(url);
+        }, 1000);
+      }, 'image/png');
+    } else {
+      fallbackDownload();
+    }
+
+    function fallbackDownload() {
+      const dataUrl = canvas.toDataURL('image/png');
+      const a = document.createElement('a');
+      a.href = dataUrl;
+      a.download = filename;
+      document.body.appendChild(a);
+      a.click();
+      a.remove();
+    }
+  }
+
+  // --- 5. Form Submission Handler ---
   form.addEventListener('submit', async (e) => {
     e.preventDefault();
     clearAllErrors();
@@ -164,19 +345,31 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 
     // 1. Full Name
-    const fullName = nameInput.value.trim();
+    const fullName = nameInput ? nameInput.value.trim() : '';
     if (!fullName || fullName.length < 2) {
       markError('err-full-name', 'att-full-name', 'Please provide your full name.');
     }
 
     // 2. Email Address
-    const email = emailInput.value.trim();
+    const email = emailInput ? emailInput.value.trim() : '';
     const emailPattern = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
     if (!email || !emailPattern.test(email)) {
       markError('err-email', 'att-email', 'Please provide a valid email address.');
     }
 
-    // 3. Attendee Type
+    // 3. Phone Number (Required)
+    const phone = phoneInput ? phoneInput.value.trim() : '';
+    if (!phone || phone.length < 7) {
+      markError('err-phone', 'att-phone', 'Please provide a valid phone or WhatsApp number.');
+    }
+
+    // 4. Instagram Handle (Optional)
+    let instagram = instagramInput ? instagramInput.value.trim() : '';
+    if (instagram && !instagram.startsWith('@') && !instagram.startsWith('http')) {
+      instagram = '@' + instagram;
+    }
+
+    // 5. Attendee Type
     const attendeeType = attendeeTypeSelect.value;
     if (!attendeeType) {
       markError('err-attendee-type', 'att-type', 'Please select what best describes you.');
@@ -184,22 +377,22 @@ document.addEventListener('DOMContentLoaded', () => {
 
     const isCouple = isIntendingCouple(attendeeType);
 
-    // 4. Planned Wedding Timeframe (Required for couples)
+    // 6. Planned Wedding Timeframe (Required for couples)
     const weddingTimeframe = timeframeSelect.value;
     if (isCouple && !weddingTimeframe) {
       markError('err-timeframe', 'att-timeframe', 'Please select your planned wedding timeframe.');
     }
 
-    // 5. Planned Wedding Location (Required for couples)
+    // 7. Planned Wedding Location (Required for couples)
     const weddingLocation = locationSelect.value;
     if (isCouple && !weddingLocation) {
       markError('err-location', 'att-location', 'Where are you planning to hold your wedding? Please select a location.');
     }
 
-    // 6. Optional: Wedding Budget
+    // 8. Optional: Wedding Budget
     const weddingBudget = document.getElementById('att-budget')?.value || 'Not specified';
 
-    // 7. Services Needed (Required for couples)
+    // 9. Services Needed (Required for couples)
     const servicesNeeded = Array.from(document.querySelectorAll('input[name="servicesNeeded"]:checked')).map(el => el.value);
     if (isCouple && servicesNeeded.length === 0) {
       isValid = false;
@@ -207,7 +400,7 @@ document.addEventListener('DOMContentLoaded', () => {
       if (!firstErrorElement) firstErrorElement = document.getElementById('services-group');
     }
 
-    // 8. How You Heard About ACWS (Required)
+    // 10. How You Heard About ACWS (Required)
     const discoveryChannel = discoverySelect.value;
     if (!discoveryChannel) {
       markError('err-discovery', 'att-discovery', 'Please tell us how you heard about ACWS.');
@@ -240,7 +433,7 @@ document.addEventListener('DOMContentLoaded', () => {
       return;
     }
 
-    // --- 5. Form Submission with Backend Integration ---
+    // --- 6. Form Submission with Backend Integration ---
     const submitBtn = document.getElementById('btn-submit-attendee');
     const originalBtnText = submitBtn.innerHTML;
     submitBtn.disabled = true;
@@ -254,6 +447,8 @@ document.addEventListener('DOMContentLoaded', () => {
     const submissionPayload = {
       fullName,
       email,
+      phone,
+      instagram: instagram || 'None provided',
       attendeeType,
       weddingTimeframe: weddingTimeframe || '',
       weddingLocation: weddingLocation || '',
@@ -273,7 +468,7 @@ document.addEventListener('DOMContentLoaded', () => {
     const API_BASE = window.ACWS_API_BASE || 'https://acwsbackend.onrender.com/api/v1';
 
     try {
-      const response = await fetch(`${API_BASE}/attendees`, {
+      let response = await fetch(`${API_BASE}/attendees`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -281,6 +476,25 @@ document.addEventListener('DOMContentLoaded', () => {
         },
         body: JSON.stringify(submissionPayload)
       });
+
+      // Defensive handling: if backend strict validator rejects extra contact fields, retry cleanly
+      if (!response.ok && (submissionPayload.phone || submissionPayload.instagram)) {
+        const testJson = await response.clone().json().catch(() => null);
+        const errMsg = testJson && (testJson.message || JSON.stringify(testJson.errors || ''));
+        if (errMsg && (errMsg.includes('phone') || errMsg.includes('instagram'))) {
+          const fallbackPayload = { ...submissionPayload };
+          delete fallbackPayload.phone;
+          delete fallbackPayload.instagram;
+          response = await fetch(`${API_BASE}/attendees`, {
+            method: 'POST',
+            headers: {
+              'Content-Type': 'application/json',
+              'Accept': 'application/json'
+            },
+            body: JSON.stringify(fallbackPayload)
+          });
+        }
+      }
 
       const resJson = await response.json().catch(() => null);
 
@@ -315,10 +529,16 @@ document.addEventListener('DOMContentLoaded', () => {
         console.warn('Storage unavailable', storageErr);
       }
 
-      // Populate summary receipt with live server data
+      // Populate summary receipt with live data
       document.getElementById('receipt-ref').textContent = refCode;
       document.getElementById('rec-full-name').textContent = fullName;
       document.getElementById('rec-email').textContent = email;
+      if (document.getElementById('rec-phone')) {
+        document.getElementById('rec-phone').textContent = phone;
+      }
+      if (document.getElementById('rec-instagram')) {
+        document.getElementById('rec-instagram').textContent = instagram || 'None provided';
+      }
       document.getElementById('rec-type').textContent = attendeeType;
       document.getElementById('rec-ticket-type').textContent = `${ticketType} (${ticketPrice})`;
       document.getElementById('rec-timeframe').textContent = weddingTimeframe || 'Not applicable';
@@ -328,6 +548,23 @@ document.addEventListener('DOMContentLoaded', () => {
       document.getElementById('rec-marketing').textContent = marketingConsent ? 'Granted (Email updates)' : 'Declined';
       document.getElementById('rec-partners').textContent = partnerConsent ? 'Granted (Partner offers)' : 'Declined';
       document.getElementById('rec-timestamp').textContent = submissionDate;
+
+      // Store pass data and render pass onto canvas
+      currentAttendeePassData = {
+        fullName,
+        email,
+        phone,
+        instagram,
+        attendeeType,
+        ticketType,
+        refCode,
+        registeredAt: submissionDate
+      };
+
+      const passCanvas = document.getElementById('attendee-pass-canvas');
+      if (passCanvas) {
+        await renderPassToCanvas(passCanvas, currentAttendeePassData);
+      }
 
       // Transition to success receipt view
       form.style.display = 'none';
@@ -343,4 +580,43 @@ document.addEventListener('DOMContentLoaded', () => {
       showToast('Registration Issue', err.message || 'Unable to connect to the server. Please check your internet connection.', true);
     }
   });
+
+  // --- 7. Save Pass Receipt (Download Badge) Button Listener ---
+  const savePassBtn = document.getElementById('btn-save-pass-receipt');
+  if (savePassBtn) {
+    savePassBtn.addEventListener('click', async () => {
+      if (!currentAttendeePassData) {
+        // Fallback to reading DOM values if currentAttendeePassData is unset
+        currentAttendeePassData = {
+          fullName: document.getElementById('rec-full-name')?.textContent || 'Attendee',
+          email: document.getElementById('rec-email')?.textContent || '',
+          phone: document.getElementById('rec-phone')?.textContent || '',
+          instagram: document.getElementById('rec-instagram')?.textContent === 'None provided' ? '' : (document.getElementById('rec-instagram')?.textContent || ''),
+          refCode: document.getElementById('receipt-ref')?.textContent || 'ACWS-2027-ATT-PASS',
+          ticketType: document.getElementById('rec-ticket-type')?.textContent?.split(' ')[0] || 'General Admission'
+        };
+      }
+
+      const passCanvas = document.getElementById('attendee-pass-canvas');
+      if (!passCanvas) return;
+
+      const origText = savePassBtn.innerHTML;
+      savePassBtn.disabled = true;
+      savePassBtn.innerHTML = '<span>⏳</span> <strong>Generating Pass...</strong>';
+
+      try {
+        await renderPassToCanvas(passCanvas, currentAttendeePassData);
+        const safeRef = (currentAttendeePassData.refCode || 'PASS').replace(/[^a-zA-Z0-9_-]/g, '_');
+        const filename = `ACWS-2027-Pass-${safeRef}.png`;
+        downloadCanvasAsImage(passCanvas, filename);
+        showToast('Pass Downloaded', `Saved your pass receipt: ${filename}`);
+      } catch (err) {
+        console.error('Download pass error:', err);
+        showToast('Download Error', 'Could not save pass receipt image. Please try again.', true);
+      } finally {
+        savePassBtn.disabled = false;
+        savePassBtn.innerHTML = origText;
+      }
+    });
+  }
 });
