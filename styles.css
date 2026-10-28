@@ -296,6 +296,24 @@ h4 { font-size: var(--step-1); font-weight: 600; letter-spacing: -0.012em; }
 }
 .brand { flex: 0 0 auto; display: flex; align-items: center; gap: .9rem; text-decoration: none; color: inherit; }
 .header__actions { flex: 0 0 auto; display: flex; align-items: center; gap: .625rem; }
+
+/* Brand Logo Image */
+.brand__logo {
+  height: 54px;
+  width: auto;
+  max-width: 160px;
+  object-fit: contain;
+  display: block;
+  flex-shrink: 0;
+  transition: transform .25s var(--ease), filter .25s var(--ease);
+}
+.brand:hover .brand__logo {
+  transform: scale(1.03);
+}
+.brand__logo--footer {
+  height: 62px;
+}
+
 /* Crest medallion, echoing the banner logo */
 .brand__mark {
   width: 50px; height: 50px; flex: none;
@@ -1806,6 +1824,8 @@ legend {
   }
   .brand { flex: 1 1 auto; min-width: 0; gap: .5rem; }
   .brand > span { min-width: 0; overflow: hidden; }
+  .brand__logo { height: 42px; max-width: 120px; }
+  .brand__logo--footer { height: 48px; }
   .brand__mark { width: 36px; height: 36px; font-size: .78rem; flex-shrink: 0; }
   .brand__name {
     font-size: .88rem;
@@ -1842,6 +1862,8 @@ legend {
 
 @media (max-width: 380px) {
   .header__bar { gap: .35rem; }
+  .brand__logo { height: 36px; max-width: 95px; }
+  .brand__logo--footer { height: 42px; }
   .brand__mark { width: 32px; height: 32px; font-size: .72rem; }
   .brand__name { font-size: .82rem; }
   .brand__sub { font-size: .38rem; letter-spacing: .1em; }
