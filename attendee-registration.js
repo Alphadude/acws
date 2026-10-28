@@ -197,12 +197,9 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 
     // 6. Optional: Wedding Budget
-    const weddingBudget = document.getElementById('att-budget').value || 'Not specified';
+    const weddingBudget = document.getElementById('att-budget')?.value || 'Not specified';
 
-    // 7. Optional: Guest Count
-    const guestCount = document.getElementById('att-guests').value || 'Not specified';
-
-    // 8. Services Needed (Required for couples)
+    // 7. Services Needed (Required for couples)
     const servicesNeeded = Array.from(document.querySelectorAll('input[name="servicesNeeded"]:checked')).map(el => el.value);
     if (isCouple && servicesNeeded.length === 0) {
       isValid = false;
@@ -210,10 +207,7 @@ document.addEventListener('DOMContentLoaded', () => {
       if (!firstErrorElement) firstErrorElement = document.getElementById('services-group');
     }
 
-    // 9. Cultural Influences (Optional)
-    const culturalInfluences = Array.from(document.querySelectorAll('input[name="culturalInfluences"]:checked')).map(el => el.value);
-
-    // 10. How You Heard About ACWS (Required)
+    // 8. How You Heard About ACWS (Required)
     const discoveryChannel = discoverySelect.value;
     if (!discoveryChannel) {
       markError('err-discovery', 'att-discovery', 'Please tell us how you heard about ACWS.');
@@ -264,9 +258,9 @@ document.addEventListener('DOMContentLoaded', () => {
       weddingTimeframe: weddingTimeframe || '',
       weddingLocation: weddingLocation || '',
       weddingBudget: weddingBudget || 'Not specified',
-      guestCount: guestCount || 'Not specified',
+      guestCount: 'Not specified',
       servicesNeeded,
-      culturalInfluences,
+      culturalInfluences: [],
       discoveryChannel: discoveryChannel || 'Instagram',
       ticketType,
       ticketPrice,
@@ -331,7 +325,6 @@ document.addEventListener('DOMContentLoaded', () => {
       document.getElementById('rec-location').textContent = weddingLocation || 'Not applicable';
       document.getElementById('rec-budget').textContent = weddingBudget;
       document.getElementById('rec-services').textContent = servicesNeeded.length ? servicesNeeded.join(', ') : 'None selected';
-      document.getElementById('rec-influences').textContent = culturalInfluences.length ? culturalInfluences.join(', ') : 'None specified';
       document.getElementById('rec-marketing').textContent = marketingConsent ? 'Granted (Email updates)' : 'Declined';
       document.getElementById('rec-partners').textContent = partnerConsent ? 'Granted (Partner offers)' : 'Declined';
       document.getElementById('rec-timestamp').textContent = submissionDate;
