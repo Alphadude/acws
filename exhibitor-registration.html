@@ -143,6 +143,12 @@
                 <div class="form-group full-span">
                   <label class="form-label" for="reg-location">Base Location (City/Town + Country) <span class="req">*</span></label>
                   <input type="text" id="reg-location" name="baseLocation" class="form-control" placeholder="e.g. London, United Kingdom" required />
+                  <div style="margin-top:0.4rem; display:flex; align-items:center; justify-content:space-between; flex-wrap:wrap; gap:0.5rem; font-size:0.82rem;">
+                    <span id="vnd-location-status" style="color:var(--mocha-400);">📍 Registration coordinates will be attached automatically</span>
+                    <button type="button" id="btn-detect-vnd-location" class="btn btn--ghost-gold" style="padding:0.25rem 0.6rem; font-size:0.75rem; border-radius:6px; cursor:pointer;">
+                      🎯 Auto-fill with Device GPS
+                    </button>
+                  </div>
                   <span class="form-err" id="err-location"></span>
                 </div>
 
@@ -519,7 +525,7 @@
                   <label for="reg-consent-admin">
                     <span class="consent-tag consent-tag--req">REQUIRED</span>
                     <strong>Privacy acknowledgement:</strong>
-                    I confirm that I have read the <a href="#privacy-notice" style="color:var(--gold-700); text-decoration:underline;">ACWS Privacy Notice</a> and understand that the personal and business information I provide will be processed by the African &amp; Caribbean Wedding Show for the purposes of assessing and administering my vendor application, communicating with me about the event, managing event operations, and meeting applicable legal, safety and record-keeping requirements. I understand that further information about how my data is used, retained, shared and how I can exercise my data-protection rights is set out in the ACWS Privacy Notice.
+                    I confirm that I have read the <a href="#privacy-notice" style="color:var(--gold-700); text-decoration:underline;">ACWS Privacy Notice</a> and understand that the personal and business information I provide, including registration location coordinates, will be processed by the African &amp; Caribbean Wedding Show for the purposes of assessing and administering my vendor application, communicating with me about the event, managing event operations, and meeting applicable legal, safety and record-keeping requirements. I understand that further information about how my data is used, retained, shared and how I can exercise my data-protection rights is set out in the ACWS Privacy Notice.
                   </label>
                 </div>
                 <span class="form-err" id="err-consent-admin"></span>
@@ -604,6 +610,10 @@
                   <tr>
                     <th>Submission Timestamp:</th>
                     <td id="rec-timestamp">—</td>
+                  </tr>
+                  <tr>
+                    <th>Registration Origin:</th>
+                    <td id="rec-geo-origin">—</td>
                   </tr>
                 </tbody>
               </table>
@@ -773,6 +783,8 @@
   <!-- Toast Stack -->
   <div class="toast-stack" id="toast-stack" aria-live="polite" aria-atomic="true"></div>
 
+  <!-- Location Service -->
+  <script src="assets/js/location-service.js"></script>
   <!-- Registration Script Logic -->
   <script src="exhibitor-registration.js"></script>
 </body>

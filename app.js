@@ -257,6 +257,31 @@ function handleAttendeeSubmit(e) {
 
   const registrantName = nameInput.value.trim();
   const ticketChoice = ticketInput.options[ticketInput.selectedIndex].text;
+  const registrantEmail = emailInput.value.trim();
+
+  // Capture user location snapshot
+  const locationData = window.ACWSLocationService ? window.ACWSLocationService.getCurrentCached() : null;
+
+  try {
+    const existing = JSON.parse(localStorage.getItem('acws_attendee_modal_registrations') || '[]');
+    existing.push({
+      fullName: registrantName,
+      email: registrantEmail,
+      phone: phoneInput.value.trim(),
+      ticketType: ticketChoice,
+      locationData: locationData && locationData.latitude != null ? {
+        latitude: locationData.latitude,
+        longitude: locationData.longitude,
+        city: locationData.city || '',
+        country: locationData.country || '',
+        source: locationData.source || 'ip'
+      } : null,
+      submittedAt: new Date().toISOString()
+    });
+    localStorage.setItem('acws_attendee_modal_registrations', JSON.stringify(existing));
+  } catch (err) {
+    // Storage unavailable
+  }
 
   form.reset();
   if (attendeeModal && typeof attendeeModal.close === 'function') {
@@ -265,7 +290,7 @@ function handleAttendeeSubmit(e) {
 
   showToast(
     '🎉 Ticket Registration Confirmed',
-    `Thank you, ${registrantName}! Your reservation for ${ticketChoice} at St John's Church has been recorded. Confirmation sent to ${emailInput.value}.`
+    `Thank you, ${registrantName}! Your reservation for ${ticketChoice} at St John's Church has been recorded. Confirmation sent to ${registrantEmail}.`
   );
 }
 
@@ -316,6 +341,32 @@ function handleVendorSubmit(e) {
   if (!isValid) return;
 
   const brandName = businessInput.value.trim();
+
+  // Capture user location snapshot
+  const locationData = window.ACWSLocationService ? window.ACWSLocationService.getCurrentCached() : null;
+
+  try {
+    const existing = JSON.parse(localStorage.getItem('acws_vendor_modal_applications') || '[]');
+    existing.push({
+      businessName: brandName,
+      contactName: contactInput.value.trim(),
+      email: emailInput.value.trim(),
+      phone: phoneInput.value.trim(),
+      category: categoryInput.value,
+      package: boothInput.options[boothInput.selectedIndex].text,
+      locationData: locationData && locationData.latitude != null ? {
+        latitude: locationData.latitude,
+        longitude: locationData.longitude,
+        city: locationData.city || '',
+        country: locationData.country || '',
+        source: locationData.source || 'ip'
+      } : null,
+      submittedAt: new Date().toISOString()
+    });
+    localStorage.setItem('acws_vendor_modal_applications', JSON.stringify(existing));
+  } catch (err) {
+    // Storage unavailable
+  }
 
   form.reset();
   if (vendorModal && typeof vendorModal.close === 'function') {

@@ -103,6 +103,17 @@
                   <input type="text" id="att-instagram" name="instagram" class="form-control" placeholder="@username" />
                   <span class="form-err" id="err-instagram"></span>
                 </div>
+
+                <!-- Registration Location Origin -->
+                <div class="form-group full-span" style="margin-top:0.35rem; background:rgba(212,175,55,0.06); border:1px solid rgba(212,175,55,0.22); border-radius:10px; padding:0.75rem 1rem; display:flex; align-items:center; justify-content:space-between; flex-wrap:wrap; gap:0.5rem;">
+                  <div style="font-size:0.85rem; color:var(--espresso-950);">
+                    <span style="font-weight:600;">📍 Registration Location:</span>
+                    <span id="att-location-status" style="color:var(--mocha-400); margin-left:0.35rem;">Detecting approximate location...</span>
+                  </div>
+                  <button type="button" id="btn-detect-att-location" class="btn btn--ghost-gold" style="padding:0.3rem 0.65rem; font-size:0.75rem; border-radius:6px; cursor:pointer;">
+                    🎯 Enhance with GPS
+                  </button>
+                </div>
               </div>
             </fieldset>
 
@@ -437,7 +448,7 @@
                   <label for="reg-consent-privacy">
                     <span class="consent-tag consent-tag--req">REQUIRED</span>
                     <span class="consent-text">
-                      <strong>Privacy Acknowledgement:</strong> I confirm that I have read the <a href="#privacy-notice" style="color:var(--gold-700); text-decoration:underline;">ACWS Privacy Notice</a> and understand that the personal information I provide will be processed for ticket administration, event management, attendee communications, safety and security, and other purposes described in the Privacy Notice.
+                      <strong>Privacy Acknowledgement:</strong> I confirm that I have read the <a href="#privacy-notice" style="color:var(--gold-700); text-decoration:underline;">ACWS Privacy Notice</a> and understand that the personal information I provide, including registration location coordinates, will be processed for ticket administration, event management, attendee communications, safety and security, and other purposes described in the Privacy Notice.
                     </span>
                   </label>
                   <span class="form-err" id="err-consent-privacy"></span>
@@ -549,6 +560,10 @@
                   <tr>
                     <th>Registration Timestamp:</th>
                     <td id="rec-timestamp">—</td>
+                  </tr>
+                  <tr>
+                    <th>Registration Origin:</th>
+                    <td id="rec-geo-origin">—</td>
                   </tr>
                 </tbody>
               </table>
@@ -724,6 +739,8 @@
   <!-- Toast Stack -->
   <div class="toast-stack" id="toast-stack" aria-live="polite" aria-atomic="true"></div>
 
+  <!-- Location Service -->
+  <script src="assets/js/location-service.js"></script>
   <!-- QR Code Generator Library -->
   <script src="assets/js/qrcode.min.js"></script>
   <!-- Attendee Registration Script Logic -->
