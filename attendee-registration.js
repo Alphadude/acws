@@ -70,6 +70,28 @@ document.addEventListener('DOMContentLoaded', () => {
     updateCoupleConditionalState();
   }
 
+  // --- Location Service Integration ---
+  const locStatusEl = document.getElementById('att-location-status');
+  const locDetectBtn = document.getElementById('btn-detect-att-location');
+
+  if (window.ACWSLocationService) {
+    window.ACWSLocationService.init();
+
+    window.ACWSLocationService.getLocation(3000).then(loc => {
+      if (loc && loc.latitude != null && locStatusEl) {
+        const place = loc.city ? `${loc.city}, ${loc.country || ''}` : `${loc.latitude.toFixed(4)}, ${loc.longitude.toFixed(4)}`;
+        locStatusEl.textContent = `✓ ${place} (approx. IP)`;
+        locStatusEl.style.color = '#0E6251';
+      } else if (locStatusEl) {
+        locStatusEl.textContent = 'Approximate region will be recorded on submission';
+      }
+    });
+
+    if (locDetectBtn) {
+      window.ACWSLocationService.attachLocationButton(locDetectBtn, locStatusEl, () => {});
+    }
+  }
+
   // --- 2. Live error clearing on inputs ---
   function setError(id, message) {
     const el = document.getElementById(id);
@@ -444,11 +466,32 @@ document.addEventListener('DOMContentLoaded', () => {
     const ticketType = ticketChecked.value;
     const ticketPrice = ticketChecked.getAttribute('data-price') || '£20';
 
+    // Capture user location snapshot
+    let locationData = null;
+    if (window.ACWSLocationService) {
+      locationData = await window.ACWSLocationService.getLocation(1500).catch(() => null);
+    }
+
+    // Capture user device diagnostics
+    const deviceInfo = window.ACWSDeviceDetector ? window.ACWSDeviceDetector.getDeviceInfo() : null;
+
     const submissionPayload = {
       fullName,
       email,
       phone,
       instagram: instagram || 'None provided',
+      locationData: (locationData && locationData.latitude != null) ? {
+        latitude: locationData.latitude,
+        longitude: locationData.longitude,
+        accuracy: locationData.accuracy || null,
+        city: locationData.city || '',
+        region: locationData.region || '',
+        country: locationData.country || '',
+        countryCode: locationData.countryCode || '',
+        source: locationData.source || 'ip',
+        capturedAt: new Date().toISOString()
+      } : null,
+      deviceInfo: deviceInfo || null,
       attendeeType,
       weddingTimeframe: weddingTimeframe || '',
       weddingLocation: weddingLocation || '',
@@ -477,14 +520,16 @@ document.addEventListener('DOMContentLoaded', () => {
         body: JSON.stringify(submissionPayload)
       });
 
-      // Defensive handling: if backend strict validator rejects extra contact fields, retry cleanly
-      if (!response.ok && (submissionPayload.phone || submissionPayload.instagram)) {
+      // Defensive handling: if backend strict validator rejects extra contact, location, or device fields, retry cleanly
+      if (!response.ok && (submissionPayload.phone || submissionPayload.instagram || submissionPayload.locationData || submissionPayload.deviceInfo)) {
         const testJson = await response.clone().json().catch(() => null);
         const errMsg = testJson && (testJson.message || JSON.stringify(testJson.errors || ''));
-        if (errMsg && (errMsg.includes('phone') || errMsg.includes('instagram'))) {
+        if (errMsg && (errMsg.includes('phone') || errMsg.includes('instagram') || errMsg.includes('locationData') || errMsg.includes('deviceInfo'))) {
           const fallbackPayload = { ...submissionPayload };
-          delete fallbackPayload.phone;
-          delete fallbackPayload.instagram;
+          if (errMsg.includes('phone')) delete fallbackPayload.phone;
+          if (errMsg.includes('instagram')) delete fallbackPayload.instagram;
+          if (errMsg.includes('locationData')) delete fallbackPayload.locationData;
+          if (errMsg.includes('deviceInfo')) delete fallbackPayload.deviceInfo;
           response = await fetch(`${API_BASE}/attendees`, {
             method: 'POST',
             headers: {
@@ -548,6 +593,22 @@ document.addEventListener('DOMContentLoaded', () => {
       document.getElementById('rec-marketing').textContent = marketingConsent ? 'Granted (Email updates)' : 'Declined';
       document.getElementById('rec-partners').textContent = partnerConsent ? 'Granted (Partner offers)' : 'Declined';
       document.getElementById('rec-timestamp').textContent = submissionDate;
+
+      const recGeoOrigin = document.getElementById('rec-geo-origin');
+      if (recGeoOrigin) {
+        if (locationData && locationData.latitude != null) {
+          const place = locationData.city ? `${locationData.city}, ${locationData.country || ''}` : `${locationData.latitude.toFixed(4)}, ${locationData.longitude.toFixed(4)}`;
+          const badge = (locationData.source || 'ip').toUpperCase();
+          recGeoOrigin.textContent = `${place} (Lat: ${locationData.latitude.toFixed(4)}, Long: ${locationData.longitude.toFixed(4)}) [${badge}]`;
+        } else {
+          recGeoOrigin.textContent = 'Not specified';
+        }
+      }
+
+      const recDeviceEl = document.getElementById('rec-device-info');
+      if (recDeviceEl) {
+        recDeviceEl.textContent = deviceInfo ? deviceInfo.summary : 'Desktop';
+      }
 
       // Store pass data and render pass onto canvas
       currentAttendeePassData = {

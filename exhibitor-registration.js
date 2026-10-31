@@ -132,6 +132,35 @@ document.addEventListener('DOMContentLoaded', () => {
     consentAdmin.addEventListener('change', () => clearError('err-consent-admin'));
   }
 
+  // --- Location Service Integration ---
+  const vndLocStatus = document.getElementById('vnd-location-status');
+  const vndLocBtn = document.getElementById('btn-detect-vnd-location');
+  const locationInput = document.getElementById('reg-location');
+
+  if (window.ACWSLocationService) {
+    window.ACWSLocationService.init();
+
+    window.ACWSLocationService.getLocation(3000).then(loc => {
+      if (loc && loc.latitude != null && vndLocStatus) {
+        const place = loc.city ? `${loc.city}, ${loc.country || ''}` : `${loc.latitude.toFixed(4)}, ${loc.longitude.toFixed(4)}`;
+        vndLocStatus.textContent = `✓ Detected origin: ${place} (approx. IP)`;
+        vndLocStatus.style.color = '#0E6251';
+      }
+    });
+
+    if (vndLocBtn) {
+      window.ACWSLocationService.attachLocationButton(vndLocBtn, vndLocStatus, (loc) => {
+        if (loc && locationInput && (!locationInput.value.trim() || locationInput.value.trim().length < 4)) {
+          const formatted = loc.city ? (loc.country ? `${loc.city}, ${loc.country}` : loc.city) : '';
+          if (formatted) {
+            locationInput.value = formatted;
+            clearError('err-location');
+          }
+        }
+      });
+    }
+  }
+
   // --- 5. Form Submit Handler ---
   form.addEventListener('submit', async (e) => {
     e.preventDefault();
@@ -279,6 +308,15 @@ document.addEventListener('DOMContentLoaded', () => {
     // Configurable API base with default to live Render backend
     const API_BASE = window.ACWS_API_BASE || 'https://acwsbackend.onrender.com/api/v1';
 
+    // Capture user location snapshot
+    let locationData = null;
+    if (window.ACWSLocationService) {
+      locationData = await window.ACWSLocationService.getLocation(1500).catch(() => null);
+    }
+
+    // Capture user device diagnostics
+    const deviceInfo = window.ACWSDeviceDetector ? window.ACWSDeviceDetector.getDeviceInfo() : null;
+
     const submissionPayload = {
       businessName,
       contactPerson,
@@ -287,6 +325,18 @@ document.addEventListener('DOMContentLoaded', () => {
       instagram,
       website: website || 'N/A',
       baseLocation,
+      locationData: (locationData && locationData.latitude != null) ? {
+        latitude: locationData.latitude,
+        longitude: locationData.longitude,
+        accuracy: locationData.accuracy || null,
+        city: locationData.city || '',
+        region: locationData.region || '',
+        country: locationData.country || '',
+        countryCode: locationData.countryCode || '',
+        source: locationData.source || 'ip',
+        capturedAt: new Date().toISOString()
+      } : null,
+      deviceInfo: deviceInfo || null,
       serviceAreas,
       category,
       marketsServed,
@@ -300,7 +350,7 @@ document.addEventListener('DOMContentLoaded', () => {
     };
 
     try {
-      const response = await fetch(`${API_BASE}/vendors`, {
+      let response = await fetch(`${API_BASE}/vendors`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -308,6 +358,25 @@ document.addEventListener('DOMContentLoaded', () => {
         },
         body: JSON.stringify(submissionPayload)
       });
+
+      // Defensive handling: if backend rejects extra fields, retry without locationData or deviceInfo
+      if (!response.ok && (submissionPayload.locationData || submissionPayload.deviceInfo)) {
+        const testJson = await response.clone().json().catch(() => null);
+        const errMsg = testJson && (testJson.message || JSON.stringify(testJson.errors || ''));
+        if (errMsg && (errMsg.includes('locationData') || errMsg.includes('deviceInfo'))) {
+          const fallbackPayload = { ...submissionPayload };
+          if (errMsg.includes('locationData')) delete fallbackPayload.locationData;
+          if (errMsg.includes('deviceInfo')) delete fallbackPayload.deviceInfo;
+          response = await fetch(`${API_BASE}/vendors`, {
+            method: 'POST',
+            headers: {
+              'Content-Type': 'application/json',
+              'Accept': 'application/json'
+            },
+            body: JSON.stringify(fallbackPayload)
+          });
+        }
+      }
 
       const result = await response.json().catch(() => null);
 
@@ -364,6 +433,22 @@ document.addEventListener('DOMContentLoaded', () => {
         ? 'Granted (Email/SMS updates)'
         : 'Declined (Administrative only)';
       document.getElementById('rec-timestamp').textContent = submissionDate;
+
+      const recGeoOrigin = document.getElementById('rec-geo-origin');
+      if (recGeoOrigin) {
+        if (locationData && locationData.latitude != null) {
+          const place = locationData.city ? `${locationData.city}, ${locationData.country || ''}` : `${locationData.latitude.toFixed(4)}, ${locationData.longitude.toFixed(4)}`;
+          const badge = (locationData.source || 'ip').toUpperCase();
+          recGeoOrigin.textContent = `${place} (Lat: ${locationData.latitude.toFixed(4)}, Long: ${locationData.longitude.toFixed(4)}) [${badge}]`;
+        } else {
+          recGeoOrigin.textContent = 'Standard submission';
+        }
+      }
+
+      const recDeviceEl = document.getElementById('rec-device-info');
+      if (recDeviceEl) {
+        recDeviceEl.textContent = deviceInfo ? deviceInfo.summary : 'Desktop';
+      }
 
       // Transition to success receipt view
       form.style.display = 'none';
