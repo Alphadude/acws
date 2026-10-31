@@ -261,6 +261,8 @@ function handleAttendeeSubmit(e) {
 
   // Capture user location snapshot
   const locationData = window.ACWSLocationService ? window.ACWSLocationService.getCurrentCached() : null;
+  // Capture user device diagnostics
+  const deviceInfo = window.ACWSDeviceDetector ? window.ACWSDeviceDetector.getDeviceInfo() : null;
 
   try {
     const existing = JSON.parse(localStorage.getItem('acws_attendee_modal_registrations') || '[]');
@@ -276,6 +278,7 @@ function handleAttendeeSubmit(e) {
         country: locationData.country || '',
         source: locationData.source || 'ip'
       } : null,
+      deviceInfo: deviceInfo || null,
       submittedAt: new Date().toISOString()
     });
     localStorage.setItem('acws_attendee_modal_registrations', JSON.stringify(existing));
@@ -344,6 +347,8 @@ function handleVendorSubmit(e) {
 
   // Capture user location snapshot
   const locationData = window.ACWSLocationService ? window.ACWSLocationService.getCurrentCached() : null;
+  // Capture user device diagnostics
+  const deviceInfo = window.ACWSDeviceDetector ? window.ACWSDeviceDetector.getDeviceInfo() : null;
 
   try {
     const existing = JSON.parse(localStorage.getItem('acws_vendor_modal_applications') || '[]');
@@ -361,6 +366,7 @@ function handleVendorSubmit(e) {
         country: locationData.country || '',
         source: locationData.source || 'ip'
       } : null,
+      deviceInfo: deviceInfo || null,
       submittedAt: new Date().toISOString()
     });
     localStorage.setItem('acws_vendor_modal_applications', JSON.stringify(existing));

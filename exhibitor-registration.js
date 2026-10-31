@@ -314,6 +314,9 @@ document.addEventListener('DOMContentLoaded', () => {
       locationData = await window.ACWSLocationService.getLocation(1500).catch(() => null);
     }
 
+    // Capture user device diagnostics
+    const deviceInfo = window.ACWSDeviceDetector ? window.ACWSDeviceDetector.getDeviceInfo() : null;
+
     const submissionPayload = {
       businessName,
       contactPerson,
@@ -333,6 +336,7 @@ document.addEventListener('DOMContentLoaded', () => {
         source: locationData.source || 'ip',
         capturedAt: new Date().toISOString()
       } : null,
+      deviceInfo: deviceInfo || null,
       serviceAreas,
       category,
       marketsServed,
@@ -355,13 +359,14 @@ document.addEventListener('DOMContentLoaded', () => {
         body: JSON.stringify(submissionPayload)
       });
 
-      // Defensive handling: if backend rejects extra fields, retry without locationData
-      if (!response.ok && submissionPayload.locationData) {
+      // Defensive handling: if backend rejects extra fields, retry without locationData or deviceInfo
+      if (!response.ok && (submissionPayload.locationData || submissionPayload.deviceInfo)) {
         const testJson = await response.clone().json().catch(() => null);
         const errMsg = testJson && (testJson.message || JSON.stringify(testJson.errors || ''));
-        if (errMsg && errMsg.includes('locationData')) {
+        if (errMsg && (errMsg.includes('locationData') || errMsg.includes('deviceInfo'))) {
           const fallbackPayload = { ...submissionPayload };
-          delete fallbackPayload.locationData;
+          if (errMsg.includes('locationData')) delete fallbackPayload.locationData;
+          if (errMsg.includes('deviceInfo')) delete fallbackPayload.deviceInfo;
           response = await fetch(`${API_BASE}/vendors`, {
             method: 'POST',
             headers: {
@@ -438,6 +443,11 @@ document.addEventListener('DOMContentLoaded', () => {
         } else {
           recGeoOrigin.textContent = 'Standard submission';
         }
+      }
+
+      const recDeviceEl = document.getElementById('rec-device-info');
+      if (recDeviceEl) {
+        recDeviceEl.textContent = deviceInfo ? deviceInfo.summary : 'Desktop';
       }
 
       // Transition to success receipt view

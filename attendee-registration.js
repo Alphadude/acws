@@ -472,6 +472,9 @@ document.addEventListener('DOMContentLoaded', () => {
       locationData = await window.ACWSLocationService.getLocation(1500).catch(() => null);
     }
 
+    // Capture user device diagnostics
+    const deviceInfo = window.ACWSDeviceDetector ? window.ACWSDeviceDetector.getDeviceInfo() : null;
+
     const submissionPayload = {
       fullName,
       email,
@@ -488,6 +491,7 @@ document.addEventListener('DOMContentLoaded', () => {
         source: locationData.source || 'ip',
         capturedAt: new Date().toISOString()
       } : null,
+      deviceInfo: deviceInfo || null,
       attendeeType,
       weddingTimeframe: weddingTimeframe || '',
       weddingLocation: weddingLocation || '',
@@ -516,15 +520,16 @@ document.addEventListener('DOMContentLoaded', () => {
         body: JSON.stringify(submissionPayload)
       });
 
-      // Defensive handling: if backend strict validator rejects extra contact or location fields, retry cleanly
-      if (!response.ok && (submissionPayload.phone || submissionPayload.instagram || submissionPayload.locationData)) {
+      // Defensive handling: if backend strict validator rejects extra contact, location, or device fields, retry cleanly
+      if (!response.ok && (submissionPayload.phone || submissionPayload.instagram || submissionPayload.locationData || submissionPayload.deviceInfo)) {
         const testJson = await response.clone().json().catch(() => null);
         const errMsg = testJson && (testJson.message || JSON.stringify(testJson.errors || ''));
-        if (errMsg && (errMsg.includes('phone') || errMsg.includes('instagram') || errMsg.includes('locationData'))) {
+        if (errMsg && (errMsg.includes('phone') || errMsg.includes('instagram') || errMsg.includes('locationData') || errMsg.includes('deviceInfo'))) {
           const fallbackPayload = { ...submissionPayload };
           if (errMsg.includes('phone')) delete fallbackPayload.phone;
           if (errMsg.includes('instagram')) delete fallbackPayload.instagram;
           if (errMsg.includes('locationData')) delete fallbackPayload.locationData;
+          if (errMsg.includes('deviceInfo')) delete fallbackPayload.deviceInfo;
           response = await fetch(`${API_BASE}/attendees`, {
             method: 'POST',
             headers: {
@@ -598,6 +603,11 @@ document.addEventListener('DOMContentLoaded', () => {
         } else {
           recGeoOrigin.textContent = 'Not specified';
         }
+      }
+
+      const recDeviceEl = document.getElementById('rec-device-info');
+      if (recDeviceEl) {
+        recDeviceEl.textContent = deviceInfo ? deviceInfo.summary : 'Desktop';
       }
 
       // Store pass data and render pass onto canvas

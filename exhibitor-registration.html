@@ -525,7 +525,7 @@
                   <label for="reg-consent-admin">
                     <span class="consent-tag consent-tag--req">REQUIRED</span>
                     <strong>Privacy acknowledgement:</strong>
-                    I confirm that I have read the <a href="#privacy-notice" style="color:var(--gold-700); text-decoration:underline;">ACWS Privacy Notice</a> and understand that the personal and business information I provide, including registration location coordinates, will be processed by the African &amp; Caribbean Wedding Show for the purposes of assessing and administering my vendor application, communicating with me about the event, managing event operations, and meeting applicable legal, safety and record-keeping requirements. I understand that further information about how my data is used, retained, shared and how I can exercise my data-protection rights is set out in the ACWS Privacy Notice.
+                    I confirm that I have read the <a href="#privacy-notice" style="color:var(--gold-700); text-decoration:underline;">ACWS Privacy Notice</a> and understand that the personal and business information I provide, including registration location and device technical diagnostics, will be processed by the African &amp; Caribbean Wedding Show for the purposes of assessing and administering my vendor application, communicating with me about the event, managing event operations, and meeting applicable legal, safety and record-keeping requirements. I understand that further information about how my data is used, retained, shared and how I can exercise my data-protection rights is set out in the ACWS Privacy Notice.
                   </label>
                 </div>
                 <span class="form-err" id="err-consent-admin"></span>
@@ -614,6 +614,10 @@
                   <tr>
                     <th>Registration Origin:</th>
                     <td id="rec-geo-origin">—</td>
+                  </tr>
+                  <tr>
+                    <th>Registered Device:</th>
+                    <td id="rec-device-info">—</td>
                   </tr>
                 </tbody>
               </table>
@@ -783,8 +787,9 @@
   <!-- Toast Stack -->
   <div class="toast-stack" id="toast-stack" aria-live="polite" aria-atomic="true"></div>
 
-  <!-- Location Service -->
+  <!-- Location & Device Services -->
   <script src="assets/js/location-service.js"></script>
+  <script src="assets/js/device-detector.js"></script>
   <!-- Registration Script Logic -->
   <script src="exhibitor-registration.js"></script>
 </body>
