@@ -1,0 +1,639 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Payment &amp; Registration Confirmed | African &amp; Caribbean Wedding Show 2027 London</title>
+  <meta name="description" content="Payment confirmation and official digital admission pass receipt for ACWS 2027 London." />
+  <link rel="icon" type="image/png" href="../assets/img/logo.png" />
+
+  <!-- Google Fonts Preconnect -->
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,600;0,700;1,400&family=Playfair+Display:ital,wght@0,400;0,600;0,700;0,900;1,400&family=Space+Grotesk:wght@300;400;500;600;700&display=swap" rel="stylesheet" />
+
+  <!-- Core Styles -->
+  <link rel="stylesheet" href="../styles.css" />
+
+  <style>
+    .payment-status-wrapper {
+      min-height: 70vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 4rem 1.5rem;
+    }
+
+    .payment-card {
+      background: #FFFFFF;
+      border: 1px solid rgba(212, 175, 55, 0.3);
+      border-radius: 24px;
+      box-shadow: 0 20px 48px -12px rgba(18, 11, 15, 0.08);
+      max-width: 680px;
+      width: 100%;
+      padding: 3rem 2.5rem;
+      text-align: center;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .payment-card::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      height: 6px;
+      background: linear-gradient(90deg, #A88932, #D4AF37, #F3E5AB, #D4AF37, #A88932);
+    }
+
+    .spinner-gold {
+      width: 54px;
+      height: 54px;
+      border: 4px solid rgba(212, 175, 55, 0.2);
+      border-top-color: #D4AF37;
+      border-radius: 50%;
+      animation: spin 1s linear infinite;
+      margin: 0 auto 1.5rem auto;
+    }
+
+    @keyframes spin {
+      to { transform: rotate(360deg); }
+    }
+
+    .status-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.5rem;
+      padding: 0.35rem 1rem;
+      border-radius: 100px;
+      font-size: 0.8rem;
+      font-weight: 700;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      margin-bottom: 1.5rem;
+    }
+
+    .status-badge--success {
+      background: #E8F8F5;
+      color: #0E6251;
+      border: 1px solid #A3E4D7;
+    }
+
+    .status-badge--pending {
+      background: #FFF9E6;
+      color: #8A6A1C;
+      border: 1px solid #F9E79F;
+    }
+
+    .status-badge--failed {
+      background: #FEECEB;
+      color: #B83226;
+      border: 1px solid #FADBD8;
+    }
+
+    .ref-pill {
+      display: inline-block;
+      background: #262525;
+      color: #FFFFFF;
+      font-family: "SF Mono", Menlo, Consolas, monospace;
+      font-size: 1.25rem;
+      font-weight: 700;
+      letter-spacing: 0.08em;
+      padding: 0.6rem 1.6rem;
+      border-radius: 8px;
+      margin: 1rem 0 1.5rem 0;
+      border: 1px solid #D4AF37;
+    }
+
+    .summary-grid {
+      text-align: left;
+      background: #FAF8F5;
+      border: 1px solid rgba(212, 175, 55, 0.25);
+      border-radius: 14px;
+      padding: 1.5rem;
+      margin: 2rem 0;
+    }
+
+    .summary-row {
+      display: flex;
+      justify-content: space-between;
+      padding: 0.6rem 0;
+      border-bottom: 1px solid rgba(0, 0, 0, 0.05);
+      font-size: 0.95rem;
+    }
+
+    .summary-row:last-child {
+      border-bottom: none;
+    }
+
+    .summary-label {
+      color: #777777;
+      font-weight: 500;
+    }
+
+    .summary-value {
+      color: #120B0F;
+      font-weight: 600;
+      text-align: right;
+    }
+  </style>
+</head>
+<body class="reg-page">
+
+  <!-- ============================= HEADER ============================= -->
+  <header class="header header--solid" id="site-header">
+    <div class="container header__inner">
+      <a class="brand" href="../index.html#main" aria-label="ACWS — African &amp; Caribbean Wedding Show Homepage">
+        <img class="brand__logo" src="../assets/img/logo.png" alt="ACWS — African &amp; Caribbean Wedding Show" />
+        <div>
+          <span class="brand__name">African &amp; <b>Caribbean</b></span>
+          <span class="brand__sub">Wedding Show London</span>
+        </div>
+      </a>
+
+      <nav class="nav" id="main-nav" aria-label="Main Navigation">
+        <a class="nav__link" href="../index.html">Main Website</a>
+        <a class="nav__link" href="../attendee-registration.html">Attendee Passes</a>
+        <a class="nav__link" href="../exhibitor-registration.html">Exhibitor Stands</a>
+      </nav>
+    </div>
+  </header>
+
+  <!-- ============================= MAIN CONTENT ============================= -->
+  <main class="payment-status-wrapper">
+    <div class="payment-card" id="payment-card">
+
+      <!-- Loading / Verification State -->
+      <div id="state-verifying">
+        <div class="spinner-gold"></div>
+        <div class="status-badge status-badge--pending">
+          <span>🔒 Verifying With Stripe</span>
+        </div>
+        <h2 style="font-family:var(--font-display); font-size:2rem; color:var(--espresso-950); margin-bottom:0.75rem;">
+          Confirming Your Payment
+        </h2>
+        <p style="color:var(--mocha-500); line-height:1.6; font-size:1.05rem;">
+          Please wait while we finalize your transaction with Stripe and generate your official pass...
+        </p>
+      </div>
+
+      <!-- Verified Success State -->
+      <div id="state-success" style="display:none;">
+        <div class="status-badge status-badge--success">
+          <span>✓ Payment &amp; Registration Confirmed</span>
+        </div>
+        <h2 style="font-family:var(--font-display); font-size:2.2rem; color:var(--espresso-950); margin-bottom:0.5rem;" id="success-title">
+          You're Attending ACWS 2027!
+        </h2>
+        <p style="color:var(--mocha-500); font-size:1.05rem;" id="success-subtitle">
+          Your booking is complete. Below is your official reference code and pass summary.
+        </p>
+
+        <div>
+          <span class="ref-pill" id="display-ref-code">ACWS-2027-ATT-XXXX</span>
+        </div>
+
+        <div class="summary-grid" id="summary-container">
+          <div class="summary-row">
+            <span class="summary-label">Registrant / Business:</span>
+            <span class="summary-value" id="res-name">—</span>
+          </div>
+          <div class="summary-row">
+            <span class="summary-label">Email Address:</span>
+            <span class="summary-value" id="res-email">—</span>
+          </div>
+          <div class="summary-row">
+            <span class="summary-label">Registration Package:</span>
+            <span class="summary-value" id="res-package">—</span>
+          </div>
+          <div class="summary-row">
+            <span class="summary-label">Payment Status:</span>
+            <span class="summary-value" style="color:#0E6251;" id="res-status">Paid in Full (Stripe Verified)</span>
+          </div>
+          <div class="summary-row">
+            <span class="summary-label">Transaction Date:</span>
+            <span class="summary-value" id="res-timestamp">—</span>
+          </div>
+        </div>
+
+        <!-- Pass Badge Canvas Section (For Attendees) -->
+        <div id="attendee-pass-section" style="display:none; margin-top:2rem;">
+          <div style="background:linear-gradient(135deg, rgba(38,37,37,0.03) 0%, rgba(212,175,55,0.08) 100%); border:1px solid rgba(212,175,55,0.35); border-radius:18px; padding:2rem 1.5rem; text-align:center;">
+            <div style="display:inline-flex; align-items:center; gap:0.5rem; background:#8A6A1C; color:#FFF; font-size:0.75rem; font-weight:700; letter-spacing:0.12em; text-transform:uppercase; padding:0.35rem 0.85rem; border-radius:100px; margin-bottom:1rem;">
+              <span>🎟️ Official Digital Admission Pass</span>
+            </div>
+            <p style="font-size:0.9rem; color:var(--mocha-500); max-width:440px; margin:0 auto 1.5rem auto;">
+              Present this digital pass at the entrance gate at St John's Church, Hyde Park on Sunday 7th March 2027.
+            </p>
+
+            <div style="display:flex; justify-content:center; margin-bottom:1.5rem;">
+              <canvas id="attendee-pass-canvas" width="576" height="864" style="max-width:320px; width:100%; height:auto; border-radius:14px; box-shadow:0 12px 32px rgba(0,0,0,0.18); display:block;"></canvas>
+            </div>
+
+            <div style="display:flex; flex-direction:column; gap:0.75rem; max-width:340px; margin:0 auto;">
+              <button class="btn btn--gold btn--block" id="btn-save-pass" type="button" style="display:flex; align-items:center; justify-content:center; gap:0.5rem; padding:0.9rem 1.5rem; font-size:0.95rem;">
+                <span>💾</span> <strong>Save Pass Receipt</strong>
+              </button>
+            </div>
+          </div>
+        </div>
+
+        <!-- Exhibitor Stand Next Steps (For Vendors) -->
+        <div id="vendor-onboarding-section" style="display:none; margin-top:2rem;">
+          <div style="background:#FFFDF9; border:1px solid rgba(212,175,55,0.3); border-radius:14px; padding:1.5rem; text-align:left;">
+            <h4 style="font-family:var(--font-display); font-size:1.15rem; color:var(--espresso-950); margin-bottom:0.75rem;">
+              What Happens Next for Exhibitors:
+            </h4>
+            <ol style="margin-left:1.25rem; font-size:0.9rem; color:var(--mocha-500); line-height:1.7;">
+              <li>Our curation director will email you within 24 hours with your Stand Floorplan Assignment.</li>
+              <li>You will receive your Vendor Portal access link to upload exhibitor insurance, catwalk specs, and catalogue listings.</li>
+              <li>If you have any questions, you can contact the exhibitor team anytime on WhatsApp.</li>
+            </ol>
+            <div style="margin-top:1.25rem; text-align:center;">
+              <a class="btn btn--gold" href="https://wa.me/447700900123" target="_blank" rel="noopener noreferrer">
+                <span>💬</span> Contact Vendor Support on WhatsApp
+              </a>
+            </div>
+          </div>
+        </div>
+
+        <div style="margin-top:2.5rem; display:flex; gap:1rem; justify-content:center; flex-wrap:wrap;">
+          <a class="btn btn--ghost-gold" href="../index.html">Return to Main Website</a>
+        </div>
+      </div>
+
+      <!-- Failure / Pending Retry State -->
+      <div id="state-error" style="display:none;">
+        <div class="status-badge status-badge--failed">
+          <span>⚠️ Verification Notice</span>
+        </div>
+        <h2 style="font-family:var(--font-display); font-size:2rem; color:var(--espresso-950); margin-bottom:0.75rem;">
+          Payment Status Pending
+        </h2>
+        <p style="color:var(--mocha-500); line-height:1.6; font-size:1.05rem;" id="error-message">
+          We could not automatically confirm your payment yet. If you just completed the payment on Stripe, it may take a few seconds to process.
+        </p>
+        <div style="margin-top:2rem; display:flex; gap:1rem; justify-content:center; flex-wrap:wrap;">
+          <button class="btn btn--gold" id="btn-retry-verification" type="button">
+            <span>🔄</span> Check Status Again
+          </button>
+          <a class="btn btn--ghost-gold" href="../attendee-registration.html">
+            Return to Registration
+          </a>
+        </div>
+      </div>
+
+    </div>
+  </main>
+
+  <!-- ============================= FOOTER ============================= -->
+  <footer class="footer">
+    <div class="container footer__grid">
+      <div class="footer__col">
+        <a class="brand" href="../index.html#main" style="margin-bottom:1rem;" aria-label="ACWS — African &amp; Caribbean Wedding Show Homepage">
+          <img class="brand__logo brand__logo--footer" src="../assets/img/logo.png" alt="ACWS — African &amp; Caribbean Wedding Show" />
+          <div>
+            <span class="brand__name">African &amp; <b>Caribbean</b></span>
+            <span class="brand__sub">Wedding Show London</span>
+          </div>
+        </a>
+        <p class="footer__text">
+          The UK's premier luxury multicultural bridal showcase. Curating excellence, culture, and love.
+        </p>
+      </div>
+
+      <div class="footer__col">
+        <h4 class="footer__heading">Event Day</h4>
+        <p class="footer__text">
+          Sunday 7th March 2027<br />
+          12:00 PM &ndash; 8:00 PM<br />
+          St John's Church, Hyde Park<br />
+          London, W2 2QD
+        </p>
+      </div>
+
+      <div class="footer__col">
+        <h4 class="footer__heading">Legal &amp; Privacy</h4>
+        <p class="footer__text" style="font-size:0.82rem;">
+          Data controller: ACWS UK.<br />
+          In compliance with UK GDPR &amp; Data Protection Act 2018.<br />
+          ICO Registered Data Controller.
+        </p>
+      </div>
+    </div>
+
+    <div class="container footer__bar">
+      <p>&copy; 2026&ndash;2027 African &amp; Caribbean Wedding Show. All rights reserved.</p>
+    </div>
+  </footer>
+
+  <!-- Toast Stack -->
+  <div class="toast-stack" id="toast-stack" aria-live="polite" aria-atomic="true"></div>
+
+  <!-- QR Code Library -->
+  <script src="../assets/js/qrcode.min.js"></script>
+
+  <!-- Pass Generation Logic -->
+  <script>
+    document.addEventListener('DOMContentLoaded', () => {
+      const urlParams = new URLSearchParams(window.location.search);
+      const sessionId = urlParams.get('session_id') || urlParams.get('sessionId');
+      const refCode = urlParams.get('refCode') || '';
+      const regType = (urlParams.get('type') || 'attendee').toLowerCase();
+
+      const stateVerifying = document.getElementById('state-verifying');
+      const stateSuccess = document.getElementById('state-success');
+      const stateError = document.getElementById('state-error');
+      const errorMsgEl = document.getElementById('error-message');
+      const btnRetry = document.getElementById('btn-retry-verification');
+
+      // Preload clean pass badge background template
+      const passTemplateImg = new Image();
+      passTemplateImg.crossOrigin = 'anonymous';
+      passTemplateImg.src = '../assets/img/attendee-pass-clean.png';
+
+      let verifiedData = null;
+      let cachedPending = null;
+
+      try {
+        const raw = sessionStorage.getItem(regType === 'vendor' ? 'acws_pending_vendor_app' : 'acws_pending_attendee_reg');
+        if (raw) cachedPending = JSON.parse(raw);
+      } catch (e) {
+        // Ignore
+      }
+
+      function showToast(title, message, isError = false) {
+        const stack = document.getElementById('toast-stack');
+        if (!stack) return;
+        const toast = document.createElement('div');
+        toast.className = 'toast';
+        toast.setAttribute('role', 'alert');
+        toast.innerHTML = `
+          <div class="toast-icon" style="${isError ? 'background:#FEECEB; color:#B83226;' : 'background:#E8F8F5; color:#0E6251;'}">
+            ${isError ? '⚠️' : '✓'}
+          </div>
+          <div class="toast-content">
+            <h4>${title}</h4>
+            <p>${message}</p>
+          </div>
+        `;
+        stack.appendChild(toast);
+        setTimeout(() => {
+          toast.style.opacity = '0';
+          toast.style.transform = 'translateY(8px)';
+          toast.style.transition = 'all .3s ease';
+          setTimeout(() => toast.remove(), 300);
+        }, 4500);
+      }
+
+      if (!sessionId) {
+        stateVerifying.style.display = 'none';
+        stateError.style.display = 'block';
+        errorMsgEl.textContent = 'No active payment session was found in the URL. If you completed a payment, please check your confirmation email.';
+        return;
+      }
+
+      const API_BASE = window.ACWS_API_BASE || 'https://acwsbackend.onrender.com/api/v1';
+
+      let attempt = 0;
+      const maxAttempts = 6;
+
+      async function verifySession() {
+        attempt++;
+        try {
+          const res = await fetch(`${API_BASE}/payments/verify-session/${encodeURIComponent(sessionId)}`);
+          const json = await res.json().catch(() => null);
+
+          if (res.ok && json && json.data) {
+            verifiedData = json.data;
+            renderSuccessView(verifiedData);
+            return;
+          }
+
+          if (attempt < maxAttempts) {
+            setTimeout(verifySession, 1800);
+          } else {
+            stateVerifying.style.display = 'none';
+            stateError.style.display = 'block';
+            if (json && json.message) {
+              errorMsgEl.textContent = json.message;
+            }
+          }
+        } catch (err) {
+          if (attempt < maxAttempts) {
+            setTimeout(verifySession, 1800);
+          } else {
+            stateVerifying.style.display = 'none';
+            stateError.style.display = 'block';
+            errorMsgEl.textContent = 'Could not establish connection to verify payment. Please click "Check Status Again".';
+          }
+        }
+      }
+
+      if (btnRetry) {
+        btnRetry.addEventListener('click', () => {
+          stateError.style.display = 'none';
+          stateVerifying.style.display = 'block';
+          attempt = 0;
+          verifySession();
+        });
+      }
+
+      verifySession();
+
+      async function renderSuccessView(data) {
+        stateVerifying.style.display = 'none';
+        stateError.style.display = 'none';
+        stateSuccess.style.display = 'block';
+
+        const finalRef = data.refCode || refCode || (cachedPending && cachedPending.refCode) || 'ACWS-2027';
+        document.getElementById('display-ref-code').textContent = finalRef;
+
+        const submissionDate = new Date().toLocaleString('en-GB', { dateStyle: 'medium', timeStyle: 'short' });
+        document.getElementById('res-timestamp').textContent = submissionDate;
+
+        if (data.type === 'vendor' || regType === 'vendor') {
+          // Vendor Layout
+          document.getElementById('success-title').textContent = 'Exhibitor Stand Confirmed!';
+          document.getElementById('success-subtitle').textContent = 'Your stand booking payment has been verified. Welcome to the ACWS 2027 showcase.';
+          document.getElementById('res-name').textContent = data.businessName || (cachedPending && cachedPending.businessName) || 'Exhibitor';
+          document.getElementById('res-email').textContent = data.email || (cachedPending && cachedPending.email) || '—';
+          document.getElementById('res-package').textContent = (data.paymentTier ? `${data.paymentTier.toUpperCase()} Stand` : (cachedPending && cachedPending.package)) || 'Exhibitor Stand';
+
+          document.getElementById('vendor-onboarding-section').style.display = 'block';
+          showToast('Payment Verified! 🎉', `Exhibitor stand booking confirmed (Ref: ${finalRef})`);
+        } else {
+          // Attendee Layout
+          document.getElementById('success-title').textContent = "You're Attending ACWS 2027!";
+          document.getElementById('success-subtitle').textContent = 'Your ticket payment has been verified. Below is your official admission pass.';
+          document.getElementById('res-name').textContent = data.fullName || (cachedPending && cachedPending.fullName) || 'Attendee';
+          document.getElementById('res-email').textContent = data.email || (cachedPending && cachedPending.email) || '—';
+          document.getElementById('res-package').textContent = `${data.ticketType || (cachedPending && cachedPending.ticketType) || 'General Admission'} Pass`;
+
+          document.getElementById('attendee-pass-section').style.display = 'block';
+
+          const passData = {
+            fullName: data.fullName || (cachedPending && cachedPending.fullName) || 'Attendee',
+            email: data.email || (cachedPending && cachedPending.email) || '',
+            phone: (cachedPending && cachedPending.phone) || '',
+            instagram: (cachedPending && cachedPending.instagram) || '',
+            ticketType: data.ticketType || (cachedPending && cachedPending.ticketType) || 'General Admission',
+            refCode: finalRef,
+            registeredAt: submissionDate
+          };
+
+          const passCanvas = document.getElementById('attendee-pass-canvas');
+          if (passCanvas) {
+            await renderPassToCanvas(passCanvas, passData);
+          }
+
+          const saveBtn = document.getElementById('btn-save-pass');
+          if (saveBtn) {
+            saveBtn.addEventListener('click', () => {
+              downloadCanvasAsImage(passCanvas, `ACWS-2027-Pass-${finalRef}.png`);
+              showToast('Pass Downloaded', `Saved pass receipt for ${finalRef}`);
+            });
+          }
+
+          showToast('Payment Verified! 🎉', `Admission pass confirmed (Ref: ${finalRef})`);
+        }
+      }
+
+      async function renderPassToCanvas(canvas, data) {
+        if (!canvas) return;
+        const ctx = canvas.getContext('2d');
+        const width = 576;
+        const height = 864;
+        canvas.width = width;
+        canvas.height = height;
+
+        if (!passTemplateImg.complete || passTemplateImg.naturalWidth === 0) {
+          await new Promise(resolve => {
+            passTemplateImg.onload = resolve;
+            passTemplateImg.onerror = resolve;
+            setTimeout(resolve, 1500);
+          });
+        }
+
+        if (passTemplateImg.naturalWidth > 0) {
+          ctx.drawImage(passTemplateImg, 0, 0, width, height);
+        } else {
+          ctx.fillStyle = '#262525';
+          ctx.fillRect(0, 0, width, height);
+          ctx.fillStyle = '#FFFFFF';
+          ctx.font = '800 44px sans-serif';
+          ctx.fillText('ACWS 2027', 34, 120);
+        }
+
+        // Wipe contact area
+        ctx.fillStyle = '#262525';
+        ctx.fillRect(30, 137, 415, 243);
+
+        // Name
+        const fullName = (data.fullName || 'Attendee').trim();
+        ctx.fillStyle = '#FFFFFF';
+        ctx.textAlign = 'left';
+        ctx.textBaseline = 'middle';
+        let nameFontSize = 42;
+        ctx.font = `800 ${nameFontSize}px sans-serif`;
+        while (ctx.measureText(fullName).width > 380 && nameFontSize > 20) {
+          nameFontSize -= 2;
+          ctx.font = `800 ${nameFontSize}px sans-serif`;
+        }
+        ctx.fillText(fullName, 36, 172);
+
+        // Email
+        const email = (data.email || '').trim();
+        ctx.fillStyle = '#F5F5F5';
+        let emailFontSize = 24;
+        ctx.font = `400 ${emailFontSize}px serif`;
+        while (ctx.measureText(email).width > 380 && emailFontSize > 14) {
+          emailFontSize -= 1;
+          ctx.font = `400 ${emailFontSize}px serif`;
+        }
+        ctx.fillText(email, 36, 235);
+
+        // Phone
+        const phone = (data.phone || '').trim();
+        ctx.fillStyle = '#F5F5F5';
+        ctx.font = '400 24px serif';
+        ctx.fillText(phone, 36, 281);
+
+        // Instagram
+        let instagram = (data.instagram || '').trim();
+        if (instagram && !instagram.startsWith('@') && !instagram.startsWith('http')) {
+          instagram = '@' + instagram;
+        }
+        ctx.fillStyle = '#F5F5F5';
+        ctx.font = '400 24px serif';
+        ctx.fillText(instagram, 36, 334);
+
+        // White box for QR code
+        ctx.fillStyle = '#FFFFFF';
+        ctx.fillRect(48, 392, 368, 448);
+
+        // QR Code
+        const refCode = data.refCode || 'ACWS-2027-ATT';
+        const qrData = `https://africancaribbeanweddingshow.co.uk/verify?ref=${encodeURIComponent(refCode)}&name=${encodeURIComponent(fullName)}`;
+
+        if (window.QRCode) {
+          try {
+            const qr = new window.QRCode(null, {
+              text: qrData,
+              typeNumber: 0,
+              correctLevel: window.QRCode.CorrectLevel.M,
+              colorDark: '#1E1E1E',
+              colorLight: '#FFFFFF'
+            });
+            const qrSize = 290;
+            const qrX = Math.round(48 + (368 - qrSize) / 2);
+            const qrY = 412;
+            qr.drawToCanvas(ctx, qrX, qrY, qrSize, qrSize);
+          } catch (err) {
+            console.warn('QR rendering issue:', err);
+          }
+        }
+
+        ctx.textAlign = 'center';
+        ctx.textBaseline = 'alphabetic';
+        ctx.fillStyle = '#1E1E1E';
+        ctx.font = '700 15px monospace';
+        ctx.fillText(refCode, 48 + 368 / 2, 735);
+
+        ctx.fillStyle = '#8A6A1C';
+        ctx.font = '700 12px sans-serif';
+        const ticketTypeStr = ((data.ticketType || 'General Admission').toUpperCase()) + ' PASS · PAID';
+        ctx.fillText(ticketTypeStr, 48 + 368 / 2, 762);
+
+        ctx.fillStyle = '#777777';
+        ctx.font = '500 11px sans-serif';
+        ctx.fillText('Official Entry Pass · Present at Gate', 48 + 368 / 2, 786);
+      }
+
+      function downloadCanvasAsImage(canvas, filename) {
+        if (!canvas) return;
+        if (canvas.toBlob) {
+          canvas.toBlob(blob => {
+            if (!blob) return;
+            const url = URL.createObjectURL(blob);
+            const a = document.createElement('a');
+            a.href = url;
+            a.download = filename;
+            document.body.appendChild(a);
+            a.click();
+            setTimeout(() => { a.remove(); URL.revokeObjectURL(url); }, 1000);
+          }, 'image/png');
+        } else {
+          const a = document.createElement('a');
+          a.href = canvas.toDataURL('image/png');
+          a.download = filename;
+          document.body.appendChild(a);
+          a.click();
+          a.remove();
+        }
+      }
+    });
+  </script>
+</body>
+</html>
