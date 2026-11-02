@@ -26,6 +26,15 @@ document.addEventListener('DOMContentLoaded', () => {
 
   let currentAttendeePassData = null;
 
+  // --- Return from Stripe Checkout Handler ---
+  const urlParams = new URLSearchParams(window.location.search);
+  const returnSessionId = urlParams.get('session_id') || urlParams.get('sessionId');
+  const returnRefCode = urlParams.get('refCode');
+
+  if (returnSessionId) {
+    handleReturningPayment(returnSessionId, returnRefCode);
+  }
+
   // --- 1. Helper: Determine if selected attendee is an intending couple ---
   function isIntendingCouple(type) {
     if (!type) return false;
@@ -554,8 +563,38 @@ document.addEventListener('DOMContentLoaded', () => {
       }
 
       const responseData = (resJson && resJson.data) || {};
+      const checkoutUrl = responseData.checkoutUrl;
+      const sessionId = responseData.sessionId;
+      const refCode = responseData.refCode || ('ACWS-2027-ATT-' + Math.floor(1000 + Math.random() * 9000));
+
+      // 1. If paid ticket requiring Stripe payment: redirect directly to Stripe Checkout
+      if (checkoutUrl) {
+        const pendingRecord = {
+          ...submissionPayload,
+          refCode,
+          sessionId,
+          checkoutUrl,
+          createdAt: new Date().toISOString()
+        };
+        try {
+          sessionStorage.setItem('acws_pending_attendee_reg', JSON.stringify(pendingRecord));
+          const existingPending = JSON.parse(localStorage.getItem('acws_pending_attendee_registrations') || '[]');
+          existingPending.push(pendingRecord);
+          localStorage.setItem('acws_pending_attendee_registrations', JSON.stringify(existingPending));
+        } catch (storageErr) {
+          console.warn('Storage unavailable', storageErr);
+        }
+
+        submitBtn.innerHTML = '<span>🔒</span> Redirecting to Secure Stripe Checkout...';
+        showToast('Redirecting to Stripe', 'Forwarding to secure checkout to complete your reservation...');
+        setTimeout(() => {
+          window.location.href = checkoutUrl;
+        }, 600);
+        return;
+      }
+
+      // 2. If complimentary or free pass: finalize immediately inline
       const attendeeRecord = responseData.attendee || responseData;
-      const refCode = responseData.refCode || attendeeRecord.refCode || ('ACWS-2027-ATT-' + Math.floor(1000 + Math.random() * 9000));
       const submissionDate = attendeeRecord.registeredAt
         ? new Date(attendeeRecord.registeredAt).toLocaleString('en-GB', { dateStyle: 'medium', timeStyle: 'short' })
         : new Date().toLocaleString('en-GB', { dateStyle: 'medium', timeStyle: 'short' });
@@ -679,5 +718,112 @@ document.addEventListener('DOMContentLoaded', () => {
         savePassBtn.innerHTML = origText;
       }
     });
+  }
+
+  // --- 8. Handle Returning from Stripe Checkout ---
+  async function handleReturningPayment(sessionId, fallbackRef) {
+    if (form) form.style.display = 'none';
+    const successCard = document.getElementById('submission-success');
+    if (successCard) {
+      successCard.style.display = 'block';
+      const refEl = document.getElementById('receipt-ref');
+      if (refEl) refEl.textContent = fallbackRef || 'Verifying Payment...';
+    }
+
+    // Try reading cached form inputs from session storage
+    let cached = {};
+    try {
+      const raw = sessionStorage.getItem('acws_pending_attendee_reg');
+      if (raw) cached = JSON.parse(raw);
+    } catch (e) {
+      // Ignore
+    }
+
+    const API_BASE = window.ACWS_API_BASE || 'https://acwsbackend.onrender.com/api/v1';
+    showToast('Verifying Pass', 'Connecting with Stripe to confirm your ticket payment...');
+
+    let attempts = 0;
+    const maxAttempts = 6;
+
+    async function pollVerification() {
+      attempts++;
+      try {
+        const res = await fetch(`${API_BASE}/payments/verify-session/${encodeURIComponent(sessionId)}`);
+        const json = await res.json().catch(() => null);
+
+        if (res.ok && json && json.data) {
+          const verified = json.data;
+          const refCode = verified.refCode || fallbackRef || cached.refCode || 'ACWS-2027-ATT';
+          const fullName = verified.fullName || cached.fullName || 'Attendee';
+          const email = verified.email || cached.email || '';
+          const phone = cached.phone || '';
+          const instagram = cached.instagram || '';
+          const ticketType = verified.ticketType || cached.ticketType || 'General Admission';
+          const ticketPrice = verified.pricePaid ? `£${verified.pricePaid}` : (cached.ticketPrice || '£20');
+          const submissionDate = new Date().toLocaleString('en-GB', { dateStyle: 'medium', timeStyle: 'short' });
+
+          // Populate receipt UI
+          const refEl = document.getElementById('receipt-ref');
+          if (refEl) refEl.textContent = refCode;
+          const nameEl = document.getElementById('rec-full-name');
+          if (nameEl) nameEl.textContent = fullName;
+          const emailEl = document.getElementById('rec-email');
+          if (emailEl) emailEl.textContent = email;
+          const phoneEl = document.getElementById('rec-phone');
+          if (phoneEl) phoneEl.textContent = phone || '—';
+          const igEl = document.getElementById('rec-instagram');
+          if (igEl) igEl.textContent = instagram || 'None provided';
+          const typeEl = document.getElementById('rec-type');
+          if (typeEl) typeEl.textContent = cached.attendeeType || 'Guest';
+          const ticketEl = document.getElementById('rec-ticket-type');
+          if (ticketEl) ticketEl.textContent = `${ticketType} (${ticketPrice}) · PAID`;
+          const timeEl = document.getElementById('rec-timeframe');
+          if (timeEl) timeEl.textContent = cached.weddingTimeframe || 'Not applicable';
+          const locEl = document.getElementById('rec-location');
+          if (locEl) locEl.textContent = cached.weddingLocation || 'Not applicable';
+          const budgetEl = document.getElementById('rec-budget');
+          if (budgetEl) budgetEl.textContent = cached.weddingBudget || 'Not specified';
+          const srvEl = document.getElementById('rec-services');
+          if (srvEl) srvEl.textContent = Array.isArray(cached.servicesNeeded) && cached.servicesNeeded.length ? cached.servicesNeeded.join(', ') : 'None specified';
+          const mktEl = document.getElementById('rec-marketing');
+          if (mktEl) mktEl.textContent = cached.marketingConsent ? 'Granted (Email updates)' : 'Declined';
+          const partEl = document.getElementById('rec-partners');
+          if (partEl) partEl.textContent = cached.partnerConsent ? 'Granted (Partner offers)' : 'Declined';
+          const timeStampEl = document.getElementById('rec-timestamp');
+          if (timeStampEl) timeStampEl.textContent = submissionDate;
+
+          currentAttendeePassData = {
+            fullName,
+            email,
+            phone,
+            instagram,
+            attendeeType: cached.attendeeType || 'Guest',
+            ticketType,
+            refCode,
+            registeredAt: submissionDate
+          };
+
+          const passCanvas = document.getElementById('attendee-pass-canvas');
+          if (passCanvas) {
+            await renderPassToCanvas(passCanvas, currentAttendeePassData);
+          }
+
+          showToast('Payment Verified! 🎉', `Your admission pass is confirmed (Ref: ${refCode})`);
+          return;
+        }
+
+        if (attempts < maxAttempts) {
+          setTimeout(pollVerification, 1800);
+        } else {
+          showToast('Payment Received', 'Your payment is being confirmed. Please refresh if your pass does not appear shortly.', false);
+        }
+      } catch (pollErr) {
+        if (attempts < maxAttempts) {
+          setTimeout(pollVerification, 1800);
+        }
+      }
+    }
+
+    pollVerification();
   }
 });

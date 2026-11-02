@@ -8,6 +8,15 @@ document.addEventListener('DOMContentLoaded', () => {
   const form = document.getElementById('vendor-registration-form');
   if (!form) return;
 
+  // --- Return from Stripe Checkout Handler ---
+  const urlParams = new URLSearchParams(window.location.search);
+  const returnSessionId = urlParams.get('session_id') || urlParams.get('sessionId');
+  const returnRefCode = urlParams.get('refCode');
+
+  if (returnSessionId) {
+    handleReturningVendorPayment(returnSessionId, returnRefCode);
+  }
+
   // --- 1. Selection Limit Manager (Max 3 for Objectives & Discovery) ---
   function setupSelectionLimiter(groupSelector, counterId, maxCount = 3) {
     const container = document.querySelector(groupSelector);
@@ -400,8 +409,38 @@ document.addEventListener('DOMContentLoaded', () => {
 
       // Extract server-provided confirmation details
       const responseData = (result && result.data) || {};
+      const checkoutUrl = responseData.checkoutUrl;
+      const sessionId = responseData.sessionId;
+      const refCode = responseData.refCode || ('ACWS-2027-VND-' + Math.floor(10000 + Math.random() * 90000));
+
+      // 1. If paid exhibitor tier requiring Stripe payment: redirect to Stripe Checkout
+      if (checkoutUrl) {
+        const pendingRecord = {
+          ...submissionPayload,
+          refCode,
+          sessionId,
+          checkoutUrl,
+          createdAt: new Date().toISOString()
+        };
+        try {
+          sessionStorage.setItem('acws_pending_vendor_app', JSON.stringify(pendingRecord));
+          const existingPending = JSON.parse(localStorage.getItem('acws_pending_vendor_submissions') || '[]');
+          existingPending.push(pendingRecord);
+          localStorage.setItem('acws_pending_vendor_submissions', JSON.stringify(existingPending));
+        } catch (storageErr) {
+          console.warn('Storage unavailable', storageErr);
+        }
+
+        submitBtn.innerHTML = '<span>🔒</span> Redirecting to Secure Stripe Checkout...';
+        showToast('Redirecting to Stripe', 'Forwarding to secure checkout to complete stand booking...');
+        setTimeout(() => {
+          window.location.href = checkoutUrl;
+        }, 600);
+        return;
+      }
+
+      // 2. If already confirmed or complimentary: show receipt inline
       const vendorData = responseData.vendor || responseData;
-      const refCode = responseData.refCode || vendorData.refCode || ('ACWS-2027-VND-' + Math.floor(10000 + Math.random() * 90000));
       const submissionDate = vendorData.createdAt
         ? new Date(vendorData.createdAt).toLocaleString('en-GB', { dateStyle: 'medium', timeStyle: 'short' })
         : new Date().toLocaleString('en-GB', { dateStyle: 'medium', timeStyle: 'short' });
@@ -464,4 +503,84 @@ document.addEventListener('DOMContentLoaded', () => {
       showToast('Submission Issue', err.message || 'Network error connecting to the server. Please check your internet connection.', true);
     }
   });
+
+  // --- 8. Handle Returning from Stripe Checkout ---
+  async function handleReturningVendorPayment(sessionId, fallbackRef) {
+    if (form) form.style.display = 'none';
+    const successCard = document.getElementById('submission-success');
+    if (successCard) {
+      successCard.style.display = 'block';
+      const refEl = document.getElementById('receipt-ref');
+      if (refEl) refEl.textContent = fallbackRef || 'Verifying Stand Payment...';
+    }
+
+    let cached = {};
+    try {
+      const raw = sessionStorage.getItem('acws_pending_vendor_app');
+      if (raw) cached = JSON.parse(raw);
+    } catch (e) {
+      // Ignore
+    }
+
+    const API_BASE = window.ACWS_API_BASE || 'https://acwsbackend.onrender.com/api/v1';
+    showToast('Verifying Booking', 'Confirming your exhibitor stand payment with Stripe...');
+
+    let attempts = 0;
+    const maxAttempts = 6;
+
+    async function pollVerification() {
+      attempts++;
+      try {
+        const res = await fetch(`${API_BASE}/payments/verify-session/${encodeURIComponent(sessionId)}`);
+        const json = await res.json().catch(() => null);
+
+        if (res.ok && json && json.data) {
+          const verified = json.data;
+          const refCode = verified.refCode || fallbackRef || cached.refCode || 'ACWS-2027-VND';
+          const businessName = verified.businessName || cached.businessName || 'Exhibitor';
+          const contactPerson = cached.contactPerson || cached.contactName || 'Primary Contact';
+          const email = verified.email || cached.email || '';
+          const phone = cached.phone || '';
+          const instagram = cached.instagram || '';
+          const category = cached.category || 'Wedding Professional';
+          const tierDisplay = verified.paymentTier ? `${verified.paymentTier.toUpperCase()} Stand (Paid)` : (cached.paymentTier || 'Stand Booking');
+          const submissionDate = new Date().toLocaleString('en-GB', { dateStyle: 'medium', timeStyle: 'short' });
+
+          const refEl = document.getElementById('receipt-ref');
+          if (refEl) refEl.textContent = refCode;
+          const bizEl = document.getElementById('rec-business-name');
+          if (bizEl) bizEl.textContent = businessName;
+          const contactEl = document.getElementById('rec-contact-name');
+          if (contactEl) contactEl.textContent = contactPerson;
+          const emailEl = document.getElementById('rec-email');
+          if (emailEl) emailEl.textContent = email;
+          const phoneEl = document.getElementById('rec-phone');
+          if (phoneEl) phoneEl.textContent = phone || '—';
+          const igEl = document.getElementById('rec-instagram');
+          if (igEl) igEl.textContent = instagram || '—';
+          const catEl = document.getElementById('rec-category');
+          if (catEl) catEl.textContent = category;
+          const pkgEl = document.getElementById('rec-package');
+          if (pkgEl) pkgEl.textContent = tierDisplay;
+          const timeEl = document.getElementById('rec-timestamp');
+          if (timeEl) timeEl.textContent = submissionDate;
+
+          showToast('Payment Verified! 🎉', `Exhibitor stand booking confirmed (Ref: ${refCode})`);
+          return;
+        }
+
+        if (attempts < maxAttempts) {
+          setTimeout(pollVerification, 1800);
+        } else {
+          showToast('Payment Received', 'Your payment is being processed. Please refresh if details do not appear shortly.', false);
+        }
+      } catch (pollErr) {
+        if (attempts < maxAttempts) {
+          setTimeout(pollVerification, 1800);
+        }
+      }
+    }
+
+    pollVerification();
+  }
 });
