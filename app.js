@@ -2,7 +2,7 @@
  * ACWS: African & Caribbean Wedding Show
  * Client Application Logic & State Management
  * Modeled after Asian Bridal Fest UK interaction architecture
- * Event Date: Sunday, 7th March 2027 · St John's Church, Hyde Park, London
+ * Event Date: Saturday, 14th March 2027 · Porchester Hall, London
  */
 
 document.addEventListener('DOMContentLoaded', () => {
@@ -14,10 +14,10 @@ document.addEventListener('DOMContentLoaded', () => {
 });
 
 /* ==========================================================================
-   1. LIVE COUNTDOWN TIMER (March 7, 2027, 12:00 PM GMT)
+   1. LIVE COUNTDOWN TIMER (March 14, 2027, 12:00 PM GMT)
    ========================================================================== */
 function initCountdownTimer() {
-  const targetDate = new Date('2027-03-07T12:00:00Z').getTime();
+  const targetDate = new Date('2027-03-14T12:00:00Z').getTime();
 
   const daysEl = document.getElementById('timer-days');
   const hoursEl = document.getElementById('timer-hours');
