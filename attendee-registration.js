@@ -26,6 +26,39 @@ document.addEventListener('DOMContentLoaded', () => {
 
   let currentAttendeePassData = null;
 
+  // Authoritative API base
+  const API_BASE = window.ACWS_API_BASE || 'https://acwsbackend.onrender.com/api/v1';
+
+  // --- Dynamic Ticket Pricing Sync ---
+  async function loadTicketPrices() {
+    try {
+      const res = await fetch(`${API_BASE}/tickets/prices`);
+      if (!res.ok) return;
+      const json = await res.json();
+      const attendeePrices = json?.data?.attendee;
+      if (!attendeePrices) return;
+
+      Object.keys(attendeePrices).forEach(key => {
+        const item = attendeePrices[key];
+        const priceSpan = document.getElementById(`price-val-${key}`);
+        if (priceSpan) {
+          priceSpan.textContent = `£${item.priceInPounds}`;
+        }
+        const radio = document.querySelector(`input[name="ticketType"][data-ticket-key="${key}"]`);
+        if (radio) {
+          radio.dataset.amountPence = item.amountInPence;
+          radio.dataset.price = `£${item.priceInPounds}`;
+          radio.setAttribute('data-amount-pence', item.amountInPence);
+          radio.setAttribute('data-price', `£${item.priceInPounds}`);
+        }
+      });
+    } catch (err) {
+      console.warn('Could not load dynamic ticket prices, using cached defaults:', err);
+    }
+  }
+
+  loadTicketPrices();
+
   // --- Return from Stripe Checkout Handler ---
   const urlParams = new URLSearchParams(window.location.search);
   const returnSessionId = urlParams.get('session_id') || urlParams.get('sessionId');
@@ -474,6 +507,7 @@ document.addEventListener('DOMContentLoaded', () => {
     const partnerConsent = document.getElementById('reg-consent-partners').checked;
     const ticketType = ticketChecked.value;
     const ticketPrice = ticketChecked.getAttribute('data-price') || '£20';
+    const clientPriceInPence = Number(ticketChecked.dataset.amountPence || ticketChecked.getAttribute('data-amount-pence')) || undefined;
 
     // Capture user location snapshot
     let locationData = null;
@@ -511,13 +545,13 @@ document.addEventListener('DOMContentLoaded', () => {
       discoveryChannel: discoveryChannel || 'Instagram',
       ticketType,
       ticketPrice,
+      clientPriceInPence,
       privacyAcknowledged: true,
       marketingConsent,
       partnerConsent
     };
 
-    // Configurable API base with default to live Render backend
-    const API_BASE = window.ACWS_API_BASE || 'https://acwsbackend.onrender.com/api/v1';
+    // Configurable API base already initialized
 
     try {
       let response = await fetch(`${API_BASE}/attendees`, {

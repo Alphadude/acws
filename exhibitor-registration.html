@@ -486,11 +486,11 @@
                 
                 <!-- RUNWAY PACKAGE -->
                 <label class="pkg-card" for="pkg-runway">
-                  <input type="radio" id="pkg-runway" name="paymentTier" value="catwalk" data-display="Runway Package — £500 (VAT included)" required />
+                  <input type="radio" id="pkg-runway" name="paymentTier" value="catwalk" data-tier-key="runway" data-amount-pence="50000" data-price="£500" data-display="Runway Package — £500 (VAT included)" required />
                   <div class="pkg-card__inner">
                     <span class="pkg-card__badge">Catwalk Only</span>
                     <h4 class="pkg-card__title">Runway Package</h4>
-                    <div class="pkg-card__price">&pound;500 <small>VAT included</small></div>
+                    <div class="pkg-card__price"><span id="price-val-runway">&pound;500</span> <small>VAT included</small></div>
                     <p class="pkg-card__desc">For fashion brands seeking high-impact visibility without an exhibition space.</p>
                     <div class="pkg-card__ideal">
                       <strong>Ideal for:</strong> Bridal designers &middot; Suit designers &middot; Jewellery brands &middot; Fashion and cultural accessory brands
@@ -505,11 +505,11 @@
 
                 <!-- ESSENTIAL EXHIBITOR PACKAGE -->
                 <label class="pkg-card" for="pkg-exhibitor">
-                  <input type="radio" id="pkg-exhibitor" name="paymentTier" value="standard" data-display="Essential Exhibitor Package — £650 (Plus VAT)" checked required />
+                  <input type="radio" id="pkg-exhibitor" name="paymentTier" value="standard" data-tier-key="essential" data-amount-pence="65000" data-price="£650" data-display="Essential Exhibitor Package — £650 (Plus VAT)" checked required />
                   <div class="pkg-card__inner">
                     <span class="pkg-card__badge" style="background:#8A6A1C; color:#FFF;">Most Popular</span>
                     <h4 class="pkg-card__title">Essential Exhibitor Package</h4>
-                    <div class="pkg-card__price">&pound;650 <small>Plus VAT</small></div>
+                    <div class="pkg-card__price"><span id="price-val-essential">&pound;650</span> <small>Plus VAT</small></div>
                     <p class="pkg-card__desc">Best for direct bookings and consultations.</p>
                     <div class="pkg-card__ideal">
                       <strong>Ideal for:</strong> Makeup artists &middot; D&eacute;cor brands &middot; Cake makers &middot; Wedding planners &middot; Photographers &amp; videographers &middot; Souvenir brands &middot; Travel and honeymoon services &middot; Accessory brands
@@ -527,11 +527,11 @@
 
                 <!-- SIGNATURE PACKAGE -->
                 <label class="pkg-card" for="pkg-signature">
-                  <input type="radio" id="pkg-signature" name="paymentTier" value="premium" data-display="Signature Package — £1,050 (Plus VAT)" required />
+                  <input type="radio" id="pkg-signature" name="paymentTier" value="premium" data-tier-key="signature" data-amount-pence="105000" data-price="£1,050" data-display="Signature Package — £1,050 (Plus VAT)" required />
                   <div class="pkg-card__inner">
                     <span class="pkg-card__badge">Exhibition Space + Catwalk</span>
                     <h4 class="pkg-card__title">Signature Package</h4>
-                    <div class="pkg-card__price">&pound;1,050 <small>Plus VAT</small></div>
+                    <div class="pkg-card__price"><span id="price-val-signature">&pound;1,050</span> <small>Plus VAT</small></div>
                     <p class="pkg-card__desc">Exhibition Space + Catwalk — For brands seeking visibility and authority.</p>
                     <div class="pkg-card__ideal">
                       <strong>Ideal for:</strong> Established bridal houses &amp; premium luxury vendors demanding maximum presence

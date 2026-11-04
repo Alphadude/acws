@@ -11,6 +11,7 @@ document.addEventListener('DOMContentLoaded', () => {
   initVenueMap();
   initModalDialogs();
   initFormsAndValidation();
+  syncModalPricing();
 });
 
 /* ==========================================================================
@@ -293,7 +294,7 @@ function handleAttendeeSubmit(e) {
 
   showToast(
     '🎉 Ticket Registration Confirmed',
-    `Thank you, ${registrantName}! Your reservation for ${ticketChoice} at St John's Church has been recorded. Confirmation sent to ${registrantEmail}.`
+    `Thank you, ${registrantName}! Your reservation for ${ticketChoice} at Porchester Hall has been recorded. Confirmation sent to ${registrantEmail}.`
   );
 }
 
@@ -437,4 +438,49 @@ function showToast(title, message) {
       }
     }, 350);
   }, 5000);
+}
+
+
+/* ==========================================================================
+   PRICING SYNC FOR MODALS
+   ========================================================================== */
+async function syncModalPricing() {
+  const API_BASE = window.ACWS_API_BASE || 'https://acwsbackend.onrender.com/api/v1';
+  try {
+    const res = await fetch(`${API_BASE}/tickets/prices`);
+    if (!res.ok) return;
+    const json = await res.json();
+    const pricing = json?.data;
+    if (!pricing) return;
+
+    // 1. Sync attendee modal ticket select
+    const attSelect = document.getElementById('att-ticket-type');
+    if (attSelect && pricing.attendee) {
+      Array.from(attSelect.options).forEach(opt => {
+        const key = opt.dataset.ticketKey;
+        if (key && pricing.attendee[key]) {
+          const item = pricing.attendee[key];
+          opt.textContent = `${item.label} (£${item.priceInPounds})`;
+          opt.dataset.price = `£${item.priceInPounds}`;
+          opt.dataset.amountPence = item.amountInPence;
+        }
+      });
+    }
+
+    // 2. Sync vendor modal package select
+    const vndSelect = document.getElementById('vnd-booth-pref');
+    if (vndSelect && pricing.vendor) {
+      Array.from(vndSelect.options).forEach(opt => {
+        const key = opt.dataset.packageKey;
+        if (key && pricing.vendor[key]) {
+          const item = pricing.vendor[key];
+          opt.textContent = `${item.label} (£${item.priceInPounds.toLocaleString()})`;
+          opt.dataset.price = `£${item.priceInPounds.toLocaleString()}`;
+          opt.dataset.amountPence = item.amountInPence;
+        }
+      });
+    }
+  } catch (err) {
+    console.warn('Could not sync modal pricing, using defaults:', err);
+  }
 }
