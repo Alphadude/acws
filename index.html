@@ -805,8 +805,8 @@
             <label class="form-label" for="att-ticket-type">Ticket Package <span class="req">*</span></label>
             <select id="att-ticket-type" name="ticketType" class="form-control" required>
               <option value="" disabled selected>Select ticket experience</option>
-              <option value="general">General Admission (&pound;20)</option>
-              <option value="vip">VIP Royal Experience (&pound;40)</option>
+              <option value="general" data-ticket-key="general" data-price="£20" data-amount-pence="2000">General Admission (&pound;20)</option>
+              <option value="vip" data-ticket-key="vip" data-price="£40" data-amount-pence="4000">VIP Royal Experience (&pound;40)</option>
             </select>
             <span class="form-err" id="err-att-ticket-type"></span>
           </div>
@@ -876,9 +876,9 @@
             <label class="form-label" for="vnd-booth-pref">Package Preference <span class="req">*</span></label>
             <select id="vnd-booth-pref" name="boothPreference" class="form-control" required>
               <option value="" disabled selected>Select your preferred package</option>
-              <option value="runway">Runway Package (&pound;500 VAT included)</option>
-              <option value="essential">Essential Exhibitor Package (&pound;650 Plus VAT)</option>
-              <option value="signature">Signature Package (&pound;1,050 Plus VAT)</option>
+              <option value="runway" data-package-key="runway" data-price="£500" data-amount-pence="50000">Runway Package (&pound;500 VAT included)</option>
+              <option value="essential" data-package-key="essential" data-price="£650" data-amount-pence="65000">Essential Exhibitor Package (&pound;650 Plus VAT)</option>
+              <option value="signature" data-package-key="signature" data-price="£1,050" data-amount-pence="105000">Signature Package (&pound;1,050 Plus VAT)</option>
             </select>
             <span class="form-err" id="err-vnd-booth-pref"></span>
           </div>

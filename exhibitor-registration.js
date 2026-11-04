@@ -17,6 +17,37 @@ document.addEventListener('DOMContentLoaded', () => {
     handleReturningVendorPayment(returnSessionId, returnRefCode);
   }
 
+  const API_BASE = window.ACWS_API_BASE || 'https://acwsbackend.onrender.com/api/v1';
+
+  async function loadVendorPricing() {
+    try {
+      const res = await fetch(`${API_BASE}/tickets/prices`);
+      if (!res.ok) return;
+      const json = await res.json();
+      const vendorPrices = json?.data?.vendor;
+      if (!vendorPrices) return;
+
+      Object.keys(vendorPrices).forEach(key => {
+        const item = vendorPrices[key];
+        const priceSpan = document.getElementById(`price-val-${key}`);
+        if (priceSpan) {
+          priceSpan.textContent = `£${item.priceInPounds.toLocaleString()}`;
+        }
+        const radio = document.querySelector(`input[name="paymentTier"][data-tier-key="${key}"]`);
+        if (radio) {
+          radio.dataset.amountPence = item.amountInPence;
+          radio.dataset.price = `£${item.priceInPounds.toLocaleString()}`;
+          radio.setAttribute('data-amount-pence', item.amountInPence);
+          radio.setAttribute('data-price', `£${item.priceInPounds.toLocaleString()}`);
+        }
+      });
+    } catch (err) {
+      console.warn('Could not load dynamic vendor pricing, using cached defaults:', err);
+    }
+  }
+
+  loadVendorPricing();
+
   // --- 1. Selection Limit Manager (Max 3 for Objectives & Discovery) ---
   function setupSelectionLimiter(groupSelector, counterId, maxCount = 3) {
     const container = document.querySelector(groupSelector);
@@ -302,6 +333,7 @@ document.addEventListener('DOMContentLoaded', () => {
     // Normalize payment tier to match backend validation enum: ['standard', 'premium', 'catwalk', 'executive']
     const rawTier = (packageChecked.value || '').trim();
     const tierDisplay = packageChecked.getAttribute('data-display') || rawTier;
+    const clientPriceInPence = Number(packageChecked.dataset.amountPence || packageChecked.getAttribute('data-amount-pence')) || undefined;
     let paymentTier = 'standard';
     const lowerTier = rawTier.toLowerCase();
     if (lowerTier === 'catwalk' || lowerTier.includes('runway') || lowerTier.includes('catwalk')) {
@@ -314,8 +346,7 @@ document.addEventListener('DOMContentLoaded', () => {
       paymentTier = 'standard';
     }
 
-    // Configurable API base with default to live Render backend
-    const API_BASE = window.ACWS_API_BASE || 'https://acwsbackend.onrender.com/api/v1';
+    // Configurable API base already initialized
 
     // Capture user location snapshot
     let locationData = null;
@@ -354,6 +385,7 @@ document.addEventListener('DOMContentLoaded', () => {
       objectives,
       discoveryChannels,
       paymentTier,
+      clientPriceInPence,
       privacyAcknowledged: true,
       marketingConsent
     };

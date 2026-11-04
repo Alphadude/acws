@@ -376,11 +376,11 @@
                 
                 <!-- GENERAL ADMISSION -->
                 <label class="pkg-card" for="ticket-general">
-                  <input type="radio" id="ticket-general" name="ticketType" value="General Admission" data-price="£20" checked required />
+                  <input type="radio" id="ticket-general" name="ticketType" value="General Admission" data-ticket-key="general" data-price="£20" data-amount-pence="2000" checked required />
                   <div class="pkg-card__inner">
                     <span class="pkg-card__badge">Standard Entry</span>
                     <h4 class="pkg-card__title">General Admission</h4>
-                    <div class="pkg-card__price">&pound;20 <small>per person</small></div>
+                    <div class="pkg-card__price"><span id="price-val-general">&pound;20</span> <small>per person</small></div>
                     <p class="pkg-card__desc">Full access to exhibition halls, live runway presentations, workshops &amp; artisan stalls.</p>
                     <ul class="pkg-card__features">
                       <li>Full exhibition day entry (12:00 &ndash; 20:00)</li>
@@ -393,11 +393,11 @@
 
                 <!-- COUPLE TICKET -->
                 <label class="pkg-card" for="ticket-couple">
-                  <input type="radio" id="ticket-couple" name="ticketType" value="Couple Ticket" data-price="£35" required />
+                  <input type="radio" id="ticket-couple" name="ticketType" value="Couple Ticket" data-ticket-key="couple" data-price="£35" data-amount-pence="3500" required />
                   <div class="pkg-card__inner">
                     <span class="pkg-card__badge" style="background:#8A6A1C; color:#FFF;">Best for 2</span>
                     <h4 class="pkg-card__title">Couple Ticket</h4>
-                    <div class="pkg-card__price">&pound;35 <small>admits 2</small></div>
+                    <div class="pkg-card__price"><span id="price-val-couple">&pound;35</span> <small>admits 2</small></div>
                     <p class="pkg-card__desc">Discounted joint pass for intending couples, fiancé(e)s or planning partners.</p>
                     <ul class="pkg-card__features">
                       <li>Entry for two attendees</li>
@@ -410,11 +410,11 @@
 
                 <!-- VIP EXPERIENCE -->
                 <label class="pkg-card" for="ticket-vip">
-                  <input type="radio" id="ticket-vip" name="ticketType" value="VIP" data-price="£40" required />
+                  <input type="radio" id="ticket-vip" name="ticketType" value="VIP" data-ticket-key="vip" data-price="£40" data-amount-pence="4000" required />
                   <div class="pkg-card__inner">
                     <span class="pkg-card__badge">Front-Row Luxury</span>
                     <h4 class="pkg-card__title">VIP Royal Experience</h4>
-                    <div class="pkg-card__price">&pound;40 <small>per person</small></div>
+                    <div class="pkg-card__price"><span id="price-val-vip">&pound;40</span> <small>per person</small></div>
                     <p class="pkg-card__desc">Fast-track admission, front-row catwalk seats, champagne &amp; luxury gift bag.</p>
                     <ul class="pkg-card__features">
                       <li>Fast-track VIP priority entry</li>
