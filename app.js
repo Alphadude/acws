@@ -114,7 +114,7 @@ function initVenueMap() {
 
     const iframe = document.createElement('iframe');
     iframe.src = mapContainer.dataset.src;
-    iframe.title = "Map showing St John's Church, Hyde Park Crescent, London W2 2QD";
+    iframe.title = "Map showing Porchester Hall, Queensway, London W2 5HS";
     iframe.loading = 'lazy';
     iframe.referrerPolicy = 'no-referrer-when-downgrade';
     iframe.allowFullscreen = true;
