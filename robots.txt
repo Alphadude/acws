@@ -7,3 +7,4 @@ Disallow: /payment-cancelled*
 
 # Sitemap Location
 Sitemap: https://acwsevents.com/sitemap.xml
+
