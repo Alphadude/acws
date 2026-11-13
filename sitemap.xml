@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9"
+        xmlns:image="http://www.google.com/schemas/sitemap-image/1.1">
+  <url>
+    <loc>https://acwsevents.com/</loc>
+    <lastmod>2026-11-13</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>1.0</priority>
+    <image:image>
+      <image:loc>https://acwsevents.com/assets/img/hero-poster.jpg</image:loc>
+      <image:title>African and Caribbean Wedding Show London 2027</image:title>
+      <image:caption>The UK's Premier African and Caribbean Wedding Show at Porchester Hall, London</image:caption>
+    </image:image>
+  </url>
+  <url>
+    <loc>https://acwsevents.com/attendee-registration</loc>
+    <lastmod>2026-11-13</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.9</priority>
+  </url>
+  <url>
+    <loc>https://acwsevents.com/exhibitor-registration</loc>
+    <lastmod>2026-11-13</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.9</priority>
+    <image:image>
+      <image:loc>https://acwsevents.com/assets/img/exhibitor-poster.jpg</image:loc>
+      <image:title>ACWS 2027 Exhibitor and Stand Application Poster</image:title>
+      <image:caption>Connect your wedding brand with 2,000+ couples at Porchester Hall London</image:caption>
+    </image:image>
+  </url>
+</urlset>
+

@@ -10,13 +10,62 @@
   </script>
 
   <meta charset="utf-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>Attendee &amp; Couple Registration | ACWS 2027 London</title>
-  <meta name="description" content="Register your visitor tickets or couple registration for the African &amp; Caribbean Wedding Show 2027 at Porchester Hall, London. Saturday 14th March 2027." />
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+  <title>Visitor Tickets &amp; Couple Registration | ACWS 2027 London</title>
+  <meta name="description" content="Book your visitor tickets and couple passes for the African &amp; Caribbean Wedding Show 2027 at Porchester Hall, London. Saturday 14th March 2027." />
+  <meta name="keywords" content="ACWS tickets, African wedding show tickets, Caribbean bridal show London, Porchester Hall wedding tickets" />
+  <meta name="robots" content="index, follow, max-image-preview:large, max-snippet:-1, max-video-preview:-1" />
   <meta name="theme-color" content="#000000" />
 
+  <!-- Canonical URL -->
+  <link rel="canonical" href="https://acwsevents.com/attendee-registration" />
+
+  <!-- Favicon and App Icons -->
+  <link rel="icon" type="image/png" href="assets/img/logo.png" />
+  <link rel="apple-touch-icon" href="assets/img/logo.png" />
+
+  <!-- OpenGraph / Social Metadata -->
+  <meta property="og:site_name" content="African &amp; Caribbean Wedding Show" />
+  <meta property="og:type" content="website" />
+  <meta property="og:url" content="https://acwsevents.com/attendee-registration" />
+  <meta property="og:title" content="Visitor Tickets &amp; Couple Passes | ACWS 2027 London" />
+  <meta property="og:description" content="Book your visitor tickets for ACWS 2027 at Porchester Hall, London. Saturday 14th March 2027. Catwalk presentations, wedding tastings &amp; luxury bridal artisans." />
+  <meta property="og:locale" content="en_GB" />
+  <meta property="og:image" content="https://acwsevents.com/assets/img/og-image.jpg" />
+  <meta property="og:image:width" content="1200" />
+  <meta property="og:image:height" content="630" />
+  <meta property="og:image:alt" content="ACWS 2027 Visitor Tickets at Porchester Hall London" />
+
+  <!-- Twitter Card Metadata -->
+  <meta name="twitter:card" content="summary_large_image" />
+  <meta name="twitter:title" content="Visitor Tickets &amp; Passes | ACWS 2027 London" />
+  <meta name="twitter:description" content="Join 2,000+ couples at Porchester Hall London. Saturday 14th March 2027. Book General Admission, Couple or VIP Royal Experience passes." />
+  <meta name="twitter:image" content="https://acwsevents.com/assets/img/og-image.jpg" />
+
   <!-- Apple San Francisco Typeface Stack & Master Design System -->
-  <link rel="stylesheet" href="styles.css?v=20" />
+  <link rel="stylesheet" href="styles.css?v=21" />
+
+  <!-- Structured Data: BreadcrumbList -->
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "BreadcrumbList",
+    "itemListElement": [
+      {
+        "@type": "ListItem",
+        "position": 1,
+        "name": "Home",
+        "item": "https://acwsevents.com/"
+      },
+      {
+        "@type": "ListItem",
+        "position": 2,
+        "name": "Attendee Registration",
+        "item": "https://acwsevents.com/attendee-registration"
+      }
+    ]
+  }
+  </script>
 </head>
 <body class="reg-page">
 
@@ -25,17 +74,17 @@
   <!-- ============================ HEADER ============================ -->
   <header class="header">
     <div class="header__bar">
-      <a class="brand" href="index.html#main" aria-label="ACWS — African &amp; Caribbean Wedding Show Homepage">
+      <a class="brand" href="/" aria-label="ACWS — African &amp; Caribbean Wedding Show Homepage">
         <img class="brand__logo" src="assets/img/logo.png" alt="ACWS — African &amp; Caribbean Wedding Show" />
       </a>
 
       <nav class="nav" id="primaryNav" aria-label="Primary Navigation">
-        <a href="index.html">← Back to Main Site</a>
-        <a href="index.html#about">The Show</a>
-        <a href="index.html#experience">Experience</a>
-        <a href="index.html#schedule">Schedule</a>
-        <a href="exhibitor-registration.html">Vendor Stand Application</a>
-        <a href="index.html#faq">FAQ</a>
+        <a href="/">← Back to Main Site</a>
+        <a href="/#about">The Show</a>
+        <a href="/#experience">Experience</a>
+        <a href="/#schedule">Schedule</a>
+        <a href="exhibitor-registration">Vendor Stand Application</a>
+        <a href="/#faq">FAQ</a>
       </nav>
 
       <div class="header__actions">
@@ -387,7 +436,7 @@
                   <input type="radio" id="ticket-general" name="ticketType" value="General Admission" data-ticket-key="general" data-price="£20" data-amount-pence="2000" checked required />
                   <div class="pkg-card__inner">
                     <span class="pkg-card__badge">Standard Entry</span>
-                    <h4 class="pkg-card__title">General Admission</h4>
+                    <h3 class="pkg-card__title">General Admission</h3>
                     <div class="pkg-card__price"><span id="price-val-general">&pound;20</span> <small>per person</small></div>
                     <p class="pkg-card__desc">Full access to exhibition halls, live runway presentations, workshops &amp; artisan stalls.</p>
                     <ul class="pkg-card__features">
@@ -404,7 +453,7 @@
                   <input type="radio" id="ticket-couple" name="ticketType" value="Couple Ticket" data-ticket-key="couple" data-price="£35" data-amount-pence="3500" required />
                   <div class="pkg-card__inner">
                     <span class="pkg-card__badge" style="background:#8A6A1C; color:#FFF;">Best for 2</span>
-                    <h4 class="pkg-card__title">Couple Ticket</h4>
+                    <h3 class="pkg-card__title">Couple Ticket</h3>
                     <div class="pkg-card__price"><span id="price-val-couple">&pound;35</span> <small>admits 2</small></div>
                     <p class="pkg-card__desc">Discounted joint pass for intending couples, fiancé(e)s or planning partners.</p>
                     <ul class="pkg-card__features">
@@ -421,7 +470,7 @@
                   <input type="radio" id="ticket-vip" name="ticketType" value="VIP" data-ticket-key="vip" data-price="£40" data-amount-pence="4000" required />
                   <div class="pkg-card__inner">
                     <span class="pkg-card__badge">Front-Row Luxury</span>
-                    <h4 class="pkg-card__title">VIP Royal Experience</h4>
+                    <h3 class="pkg-card__title">VIP Royal Experience</h3>
                     <div class="pkg-card__price"><span id="price-val-vip">&pound;40</span> <small>per person</small></div>
                     <p class="pkg-card__desc">Fast-track admission, front-row catwalk seats, champagne &amp; luxury gift bag.</p>
                     <ul class="pkg-card__features">
@@ -656,8 +705,11 @@
           <!-- OFFICIAL FLYER PREVIEW -->
           <div class="sidebar-panel" style="padding:1rem;">
             <figure class="plate" style="margin:0;">
-              <img src="assets/img/exhibitor-poster.jpg" width="682" height="1024"
-                   alt="ACWS London 2027 Official Flyer — Saturday 14th March 2027 at Porchester Hall London" />
+              <picture>
+                <source srcset="assets/img/exhibitor-poster.webp" type="image/webp" />
+                <img src="assets/img/exhibitor-poster.jpg" width="682" height="1024" loading="lazy" decoding="async"
+                     alt="ACWS London 2027 Official Flyer — Saturday 14th March 2027 at Porchester Hall London" />
+              </picture>
             </figure>
           </div>
 
@@ -697,7 +749,7 @@
   <footer class="footer">
     <div class="container footer__grid">
       <div class="footer__col">
-        <a class="brand" href="index.html#main" style="margin-bottom:1rem;" aria-label="ACWS — African &amp; Caribbean Wedding Show Homepage">
+        <a class="brand" href="/" style="margin-bottom:1rem;" aria-label="ACWS — African &amp; Caribbean Wedding Show Homepage">
           <img class="brand__logo brand__logo--footer" src="assets/img/logo.png" alt="ACWS — African &amp; Caribbean Wedding Show" />
           <div>
             <span class="brand__name">African &amp; <b>Caribbean</b></span>
@@ -710,17 +762,17 @@
       </div>
 
       <div class="footer__col">
-        <h4 class="footer__heading">Quick Links</h4>
+        <p class="footer__heading"><strong>Quick Links</strong></p>
         <ul class="footer__nav">
-          <li><a href="index.html">Main Website</a></li>
-          <li><a href="exhibitor-registration.html">Vendor Stand Application</a></li>
-          <li><a href="index.html#experience">The Experience</a></li>
-          <li><a href="index.html#faq">Frequently Asked Questions</a></li>
+          <li><a href="/">Main Website</a></li>
+          <li><a href="exhibitor-registration">Vendor Stand Application</a></li>
+          <li><a href="/#experience">The Experience</a></li>
+          <li><a href="/#faq">Frequently Asked Questions</a></li>
         </ul>
       </div>
 
       <div class="footer__col">
-        <h4 class="footer__heading">Event Day</h4>
+        <p class="footer__heading"><strong>Event Day</strong></p>
         <p class="footer__text">
           Saturday 14th March 2027<br />
           12:00 PM &ndash; 8:00 PM<br />
@@ -730,7 +782,7 @@
       </div>
 
       <div class="footer__col">
-        <h4 class="footer__heading">Legal &amp; Privacy</h4>
+        <p class="footer__heading"><strong>Legal &amp; Privacy</strong></p>
         <p class="footer__text" style="font-size:0.82rem;">
           Data controller: ACWS UK.<br />
           In compliance with UK GDPR &amp; Data Protection Act 2018.<br />
@@ -743,7 +795,7 @@
       <p>&copy; 2026&ndash;2027 African &amp; Caribbean Wedding Show. All rights reserved.</p>
       <div class="footer__legal">
         <a href="#privacy-notice">Privacy Notice</a>
-        <a href="index.html">Terms of Participation</a>
+        <a href="/">Terms of Participation</a>
       </div>
     </div>
   </footer>
