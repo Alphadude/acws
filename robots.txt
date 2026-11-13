@@ -1,0 +1,9 @@
+# robots.txt for https://acwsevents.com
+User-agent: *
+Allow: /
+Disallow: /api/
+Disallow: /payment/cancelled*
+Disallow: /payment-cancelled*
+
+# Sitemap Location
+Sitemap: https://acwsevents.com/sitemap.xml
